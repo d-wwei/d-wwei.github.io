@@ -1,0 +1,1714 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eli - Harnessing Models into External Brains</title>
+    <meta
+      name="description"
+      content="Eli 的中文首页 v0.2 视觉方向稿：Arctic Research 风格下的 Agent Harness、自动化工作流与外脑叙事。"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ice: #edf4f8;
+        --ice-2: #f7fbfc;
+        --paper: #fffaf0;
+        --ink: #142431;
+        --ink-2: #284653;
+        --muted: #5d7580;
+        --line: rgba(20, 36, 49, 0.16);
+        --line-strong: rgba(20, 36, 49, 0.28);
+        --cyan: #0e7490;
+        --cyan-deep: #075f75;
+        --cyan-soft: rgba(14, 116, 144, 0.12);
+        --avocado: #6f8f42;
+        --avocado-deep: #405d26;
+        --gold: #b98932;
+        --charcoal: #20231f;
+        --white: #ffffff;
+        --shadow: 0 18px 54px rgba(20, 36, 49, 0.12);
+        --shell: 1180px;
+        --radius: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(14, 116, 144, 0.055) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(20, 36, 49, 0.045) 1px, transparent 1px),
+          linear-gradient(180deg, #f9fcfd 0%, var(--ice) 38%, #e5f0f4 100%);
+        background-size: 48px 48px, 48px 48px, auto;
+        color: var(--ink);
+        font-family:
+          "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.68;
+        letter-spacing: 0;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        content: "";
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+          repeating-linear-gradient(135deg, rgba(20, 36, 49, 0.025) 0 1px, transparent 1px 12px);
+      }
+
+      a {
+        color: inherit;
+        text-decoration-color: rgba(14, 116, 144, 0.42);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.22em;
+      }
+
+      a:hover {
+        color: var(--cyan-deep);
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      summary:focus-visible {
+        border-radius: 4px;
+        outline: 2px solid var(--cyan);
+        outline-offset: 4px;
+      }
+
+      button,
+      summary {
+        font: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .skip-link {
+        position: fixed;
+        left: 16px;
+        top: 16px;
+        z-index: 1000;
+        transform: translateY(-140%);
+        border: 1px solid var(--cyan);
+        border-radius: var(--radius);
+        background: var(--white);
+        color: var(--ink);
+        padding: 10px 12px;
+        font-weight: 800;
+      }
+
+      .skip-link:focus-visible {
+        transform: translateY(0);
+      }
+
+      .shell {
+        width: min(var(--shell), calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid var(--line);
+        background: rgba(237, 244, 248, 0.82);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        display: flex;
+        min-height: 68px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        position: relative;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 auto;
+        overflow: hidden;
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        background: var(--paper);
+      }
+
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .brand-text {
+        display: grid;
+        gap: 1px;
+      }
+
+      .brand-text strong {
+        font-size: 0.98rem;
+        line-height: 1.1;
+      }
+
+      .brand-text span,
+      .nav a,
+      .eyebrow,
+      .tag,
+      .status,
+      .metric span,
+      .node-meta,
+      .panel-label {
+        font-family:
+          "Avenir Next Condensed", "Arial Narrow", "PingFang SC",
+          sans-serif;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .brand-text span {
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 800;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 4px;
+      }
+
+      .nav a {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        color: var(--ink-2);
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 0 10px;
+        text-decoration: none;
+      }
+
+      .nav a:hover {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .hero {
+        position: relative;
+        min-height: 0;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        background: var(--ice-2);
+      }
+
+      .hero::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(247, 251, 252, 0.96) 0%, rgba(247, 251, 252, 0.88) 36%, rgba(247, 251, 252, 0.54) 68%, rgba(247, 251, 252, 0.4) 100%),
+          linear-gradient(180deg, rgba(237, 244, 248, 0.24), rgba(237, 244, 248, 0.9) 94%);
+        z-index: 1;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        opacity: 0.72;
+        filter: saturate(0.88) contrast(0.96);
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 430px;
+        align-content: center;
+        align-items: end;
+        gap: 34px;
+        padding: 36px 0 28px;
+      }
+
+      .identity-strip {
+        display: flex;
+        grid-column: 1 / -1;
+        max-width: 780px;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .identity-strip .avatar {
+        width: 74px;
+        height: 74px;
+        overflow: hidden;
+        border: 1px solid rgba(20, 36, 49, 0.22);
+        border-radius: 50%;
+        background: var(--paper);
+        box-shadow: 0 8px 24px rgba(20, 36, 49, 0.14);
+      }
+
+      .identity-strip .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero-copy {
+        max-width: 850px;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--cyan);
+        font-size: 0.86rem;
+        font-weight: 900;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1,
+      h2,
+      .hero-role,
+      .panel-title {
+        font-family:
+          "Optima", "Avenir Next", "PingFang SC", "Hiragino Sans GB",
+          sans-serif;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 18px;
+        color: #10202d;
+        font-size: 4.1rem;
+        font-weight: 720;
+        line-height: 0.94;
+        text-wrap: balance;
+      }
+
+      .hero-role {
+        max-width: 760px;
+        margin-bottom: 22px;
+        color: var(--ink-2);
+        font-size: 1.44rem;
+        font-weight: 760;
+        line-height: 1.22;
+      }
+
+      .hero-thesis {
+        max-width: 780px;
+        margin-bottom: 18px;
+        color: var(--ink);
+        font-size: 1.2rem;
+        line-height: 1.78;
+        text-wrap: pretty;
+      }
+
+      .hero-support {
+        max-width: 760px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 1rem;
+        text-wrap: pretty;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+      }
+
+      .hero-actions a {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--ink);
+        padding: 0 15px;
+        font-weight: 760;
+        text-decoration: none;
+      }
+
+      .hero-actions a.primary {
+        border-color: var(--cyan);
+        background: var(--cyan);
+        color: var(--white);
+      }
+
+      .hero-actions a:hover {
+        border-color: var(--cyan);
+        transform: translateY(-1px);
+      }
+
+      .coordinate-panel {
+        width: min(430px, 100%);
+        justify-self: end;
+        border: 1px solid rgba(20, 36, 49, 0.18);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.64);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .panel-header {
+        display: flex;
+        min-height: 52px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-bottom: 1px solid var(--line);
+        padding: 0 16px;
+      }
+
+      .panel-label {
+        color: var(--cyan);
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .panel-title {
+        margin: 0;
+        color: var(--ink);
+        font-size: 1.36rem;
+        font-weight: 780;
+      }
+
+      .coordinate-flow {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .flow-cell {
+        min-height: 88px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+      }
+
+      .flow-cell:last-child {
+        border-bottom: 0;
+      }
+
+      .flow-cell span {
+        display: block;
+        color: var(--cyan);
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+
+      .flow-cell strong {
+        display: block;
+        margin-top: 9px;
+        color: var(--ink);
+        font-size: 1.08rem;
+        line-height: 1.25;
+      }
+
+      .flow-cell p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      .panel-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border-top: 1px solid var(--line);
+        padding: 12px 16px;
+      }
+
+      .tag,
+      .status {
+        display: inline-flex;
+        min-height: 30px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 10px;
+        color: var(--ink-2);
+        font-size: 0.76rem;
+        font-weight: 900;
+      }
+
+      .tag.green {
+        border-color: rgba(111, 143, 66, 0.35);
+        background: rgba(111, 143, 66, 0.12);
+        color: var(--avocado-deep);
+      }
+
+      .tag.gold {
+        border-color: rgba(185, 137, 50, 0.36);
+        background: rgba(185, 137, 50, 0.12);
+        color: #77561c;
+      }
+
+      main {
+        background:
+          linear-gradient(180deg, rgba(247, 251, 252, 0), rgba(247, 251, 252, 0.72) 18%, rgba(237, 244, 248, 0.76));
+      }
+
+      .section {
+        scroll-margin-top: 92px;
+        border-bottom: 1px solid var(--line);
+        padding: 74px 0;
+      }
+
+      .section.alt {
+        background: rgba(255, 250, 240, 0.34);
+      }
+
+      .section-grid {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.34fr) minmax(0, 0.66fr);
+        gap: 56px;
+        align-items: start;
+      }
+
+      .section-head h2 {
+        margin-bottom: 18px;
+        color: var(--ink);
+        font-size: 3.1rem;
+        font-weight: 780;
+        line-height: 1.04;
+        text-wrap: balance;
+      }
+
+      .section-head p,
+      .lead {
+        color: var(--muted);
+        font-size: 1.04rem;
+        line-height: 1.82;
+        text-wrap: pretty;
+      }
+
+      .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+
+      .insight-card,
+      .change-row,
+      .presence-card,
+      .future-card,
+      .atlas-node,
+      .note-card {
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.56);
+      }
+
+      .insight-card {
+        min-height: 260px;
+        padding: 20px;
+      }
+
+      .metric {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 34px;
+      }
+
+      .metric strong {
+        color: var(--cyan);
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 900;
+      }
+
+      .insight-card h3,
+      .presence-card h3,
+      .atlas-node h3,
+      .note-card h3 {
+        margin-bottom: 10px;
+        color: var(--ink);
+        font-size: 1.25rem;
+        line-height: 1.22;
+      }
+
+      .insight-card p,
+      .presence-card p,
+      .future-card p,
+      .atlas-node p,
+      .note-card p,
+      .change-row p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.68;
+      }
+
+      .change-list {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .change-row {
+        display: grid;
+        grid-template-columns: 74px minmax(170px, 0.34fr) minmax(0, 0.66fr);
+        gap: 18px;
+        align-items: start;
+        min-height: 120px;
+        border-right: 0;
+        padding: 18px 0;
+        background: transparent;
+      }
+
+      .change-row .num {
+        display: grid;
+        min-height: 52px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--cyan);
+        font-weight: 900;
+      }
+
+      .change-row h3 {
+        margin: 6px 0 0;
+        color: var(--ink);
+        font-size: 1.18rem;
+        line-height: 1.25;
+      }
+
+      .presence-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+
+      .presence-card {
+        min-height: 240px;
+        padding: 20px;
+      }
+
+      .presence-card .tag {
+        margin-bottom: 28px;
+      }
+
+      .lume-band {
+        display: grid;
+        grid-template-columns: minmax(0, 0.72fr) minmax(230px, 0.28fr);
+        gap: 28px;
+        align-items: stretch;
+        margin-top: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(135deg, rgba(111, 143, 66, 0.12), rgba(14, 116, 144, 0.06)),
+          rgba(255, 255, 255, 0.54);
+        padding: 22px;
+      }
+
+      .lume-band h3 {
+        margin-bottom: 10px;
+        color: var(--ink);
+        font-size: 1.3rem;
+      }
+
+      .lume-band p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .lume-status {
+        display: grid;
+        align-content: center;
+        gap: 10px;
+        border-left: 1px solid var(--line);
+        padding-left: 24px;
+      }
+
+      .future-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .future-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+
+      .future-card summary {
+        display: grid;
+        min-height: 156px;
+        cursor: pointer;
+        gap: 18px;
+        padding: 20px;
+        list-style: none;
+      }
+
+      .future-card summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .future-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .future-top span {
+        color: var(--cyan);
+        font-weight: 900;
+      }
+
+      .future-top strong {
+        color: var(--ink);
+        font-size: 1.3rem;
+        line-height: 1.22;
+      }
+
+      .future-card[open] {
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow);
+      }
+
+      .future-body {
+        border-top: 1px solid var(--line);
+        padding: 0 20px 20px;
+      }
+
+      .future-body p {
+        margin-top: 16px;
+      }
+
+      .atlas {
+        display: grid;
+        gap: 14px;
+      }
+
+      .atlas-legend {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .atlas-map {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        overflow: visible;
+      }
+
+      .atlas-layer {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: 7px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(247, 251, 252, 0.48)),
+          rgba(255, 255, 255, 0.52);
+        padding: 10px;
+      }
+
+      .atlas-layer::before {
+        position: absolute;
+        inset: 42px 50% 16px auto;
+        width: 1px;
+        background: linear-gradient(180deg, rgba(14, 116, 144, 0.22), rgba(20, 36, 49, 0.08));
+        content: "";
+      }
+
+      .atlas-layer-head {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 3px;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 8px;
+      }
+
+      .atlas-layer-head span {
+        color: var(--cyan);
+        font-size: 0.72rem;
+        font-weight: 900;
+      }
+
+      .atlas-layer-head strong {
+        color: var(--ink);
+        font-size: 0.98rem;
+        line-height: 1.12;
+      }
+
+      .atlas-node-list {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        gap: 6px;
+      }
+
+      .atlas-node {
+        position: relative;
+        display: grid;
+        min-height: 38px;
+        cursor: default;
+        appearance: none;
+        border: 1px solid rgba(20, 36, 49, 0.15);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.74);
+        color: var(--ink);
+        padding: 8px 9px;
+        text-align: left;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease,
+          background-color 160ms ease;
+      }
+
+      .atlas-node:hover,
+      .atlas-node.is-open,
+      .atlas-node:focus,
+      .atlas-node:focus-visible {
+        z-index: 20;
+        border-color: rgba(14, 116, 144, 0.46);
+        background: rgba(14, 116, 144, 0.1);
+        box-shadow: 0 12px 28px rgba(20, 36, 49, 0.14);
+        outline: none;
+        transform: translateY(-1px);
+      }
+
+      .node-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .node-name {
+        color: var(--ink);
+        font-size: 0.86rem;
+        font-weight: 820;
+        line-height: 1.1;
+      }
+
+      .node-status,
+      .legend-chip {
+        display: inline-flex;
+        min-height: 22px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        padding: 0 7px;
+        font-size: 0.62rem;
+        font-weight: 900;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .node-status.status-gap,
+      .legend-chip.status-gap {
+        border-color: rgba(32, 35, 31, 0.2);
+        background: rgba(32, 35, 31, 0.08);
+        color: var(--charcoal);
+      }
+
+      .node-status.status-wip,
+      .node-status.status-early,
+      .legend-chip.status-wip,
+      .legend-chip.status-early {
+        border-color: rgba(185, 137, 50, 0.34);
+        background: rgba(185, 137, 50, 0.13);
+        color: #77561c;
+      }
+
+      .node-status.status-used,
+      .legend-chip.status-used {
+        border-color: rgba(111, 143, 66, 0.34);
+        background: rgba(111, 143, 66, 0.13);
+        color: var(--avocado-deep);
+      }
+
+      .node-status.status-prototype,
+      .legend-chip.status-prototype {
+        border-color: rgba(14, 116, 144, 0.3);
+        background: rgba(14, 116, 144, 0.12);
+        color: var(--cyan-deep);
+      }
+
+      .node-status.status-article,
+      .legend-chip.status-article {
+        border-color: rgba(46, 91, 129, 0.3);
+        background: rgba(46, 91, 129, 0.11);
+        color: #315c85;
+      }
+
+      .node-popover {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 8px);
+        z-index: 30;
+        display: grid;
+        width: min(340px, 78vw);
+        gap: 9px;
+        border: 1px solid rgba(20, 36, 49, 0.2);
+        border-radius: var(--radius);
+        background: rgba(250, 253, 254, 0.98);
+        box-shadow: 0 18px 46px rgba(20, 36, 49, 0.2);
+        opacity: 0;
+        padding: 13px;
+        pointer-events: none;
+        transform: translateY(-5px);
+        transition:
+          opacity 160ms ease,
+          transform 160ms ease;
+      }
+
+      .atlas-layer:nth-child(3) .node-popover {
+        right: 0;
+        left: auto;
+      }
+
+      .atlas-node:hover .node-popover,
+      .atlas-node.is-open .node-popover,
+      .atlas-node:focus .node-popover,
+      .atlas-node:focus-visible .node-popover {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .node-popover strong {
+        color: var(--ink);
+        font-size: 1.05rem;
+        line-height: 1.18;
+      }
+
+      .node-popover p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+
+      .node-related {
+        color: var(--cyan-deep);
+        font-size: 0.76rem;
+        font-weight: 850;
+        line-height: 1.35;
+      }
+
+      .map-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      .node-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .status {
+        min-height: 28px;
+        border-color: rgba(14, 116, 144, 0.26);
+        background: var(--cyan-soft);
+        color: var(--cyan-deep);
+        font-size: 0.72rem;
+      }
+
+      .status.gap {
+        border-color: rgba(32, 35, 31, 0.2);
+        background: rgba(32, 35, 31, 0.08);
+        color: var(--charcoal);
+      }
+
+      .status.wip {
+        border-color: rgba(185, 137, 50, 0.34);
+        background: rgba(185, 137, 50, 0.12);
+        color: #77561c;
+      }
+
+      .status.used {
+        border-color: rgba(111, 143, 66, 0.34);
+        background: rgba(111, 143, 66, 0.13);
+        color: var(--avocado-deep);
+      }
+
+      .closing {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 0;
+        background: #142431;
+        color: var(--white);
+      }
+
+      .closing::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0.8;
+      }
+
+      .closing .shell {
+        position: relative;
+        z-index: 1;
+      }
+
+      .closing-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.64fr) minmax(280px, 0.36fr);
+        gap: 42px;
+        align-items: end;
+      }
+
+      .closing h2 {
+        margin-bottom: 20px;
+        color: var(--white);
+        font-size: 3.1rem;
+        line-height: 1.05;
+      }
+
+      .closing p {
+        max-width: 760px;
+        margin-bottom: 18px;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 1.08rem;
+      }
+
+      .contact-panel {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.06);
+        padding: 20px;
+      }
+
+      .contact-panel .panel-label {
+        display: block;
+        margin-bottom: 14px;
+        color: #9fd6e4;
+      }
+
+      .contact-links {
+        display: grid;
+        gap: 10px;
+      }
+
+      .contact-links a,
+      .contact-links span {
+        display: flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.16);
+        color: rgba(255, 255, 255, 0.86);
+        text-decoration: none;
+      }
+
+      .contact-links small {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      @media (max-width: 960px) {
+        .topbar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 12px 0;
+        }
+
+        .nav {
+          justify-content: flex-start;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .coordinate-panel {
+          width: min(720px, 100%);
+          justify-self: start;
+        }
+
+        .coordinate-flow {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        h1 {
+          font-size: 4rem;
+        }
+
+        .section-grid,
+        .closing-grid,
+        .lume-band {
+          grid-template-columns: 1fr;
+        }
+
+        .flow-cell {
+          border-right: 1px solid var(--line);
+          border-bottom: 0;
+        }
+
+        .flow-cell:last-child {
+          border-right: 0;
+        }
+
+        .section-head h2,
+        .closing h2 {
+          font-size: 2.45rem;
+        }
+
+        .insight-grid,
+        .presence-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .atlas-legend {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .change-row {
+          grid-template-columns: 58px minmax(0, 1fr);
+        }
+
+        .change-row p {
+          grid-column: 2;
+        }
+
+        .lume-status {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+          padding-left: 0;
+          padding-top: 16px;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(100% - 24px, var(--shell));
+        }
+
+        .topbar {
+          position: static;
+        }
+
+        .nav a {
+          min-height: 38px;
+          padding: 0 8px;
+        }
+
+        .hero,
+        .hero-grid {
+          min-height: auto;
+        }
+
+        .hero-grid {
+          padding: 34px 0 28px;
+        }
+
+        .hero::before {
+          background:
+            linear-gradient(180deg, rgba(247, 251, 252, 0.96), rgba(247, 251, 252, 0.78) 62%, rgba(237, 244, 248, 0.94) 100%);
+        }
+
+        .hero-bg {
+          object-position: 58% top;
+          opacity: 0.48;
+        }
+
+        .identity-strip .avatar {
+          width: 54px;
+          height: 54px;
+        }
+
+        h1 {
+          font-size: 2.46rem;
+          line-height: 1;
+        }
+
+        .hero-role {
+          margin-bottom: 14px;
+          font-size: 1.08rem;
+        }
+
+        .hero-thesis {
+          margin-bottom: 0;
+          font-size: 0.98rem;
+        }
+
+        .hero-support,
+        .coordinate-panel {
+          display: none;
+        }
+
+        .hero-actions a {
+          flex: 1 1 160px;
+        }
+
+        .section {
+          padding: 54px 0;
+        }
+
+        .section-grid {
+          gap: 28px;
+        }
+
+        .section-head h2,
+        .closing h2 {
+          font-size: 2rem;
+        }
+
+        .insight-grid,
+        .presence-grid,
+        .future-grid,
+        .atlas-legend,
+        .atlas-map {
+          grid-template-columns: 1fr;
+        }
+
+        .change-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 18px 0 22px;
+        }
+
+        .change-row .num {
+          width: 52px;
+        }
+
+        .change-row p {
+          grid-column: auto;
+        }
+
+        .future-card summary {
+          min-height: 132px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href="#top" aria-label="Eli homepage">
+          <span class="brand-mark">
+            <img src="assets/latent-avocado-avatar.png" alt="潜空间里的鳄梨头像" />
+          </span>
+          <span class="brand-text">
+            <strong>Eli</strong>
+            <span>Agent-native Product & Harness Builder</span>
+          </span>
+        </a>
+        <nav class="nav" aria-label="页面导航">
+          <a href="#blind-zone">历史盲区</a>
+          <a href="#factory">自动化工业</a>
+          <a href="#external-brain">外脑</a>
+          <a href="#far-fields">四个远方</a>
+          <a href="#atlas">Atlas</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="top" aria-labelledby="home-title">
+      <img class="hero-bg" src="assets/latent-avocado-background.jpeg" alt="" aria-hidden="true" />
+      <div class="shell hero-grid">
+        <div class="identity-strip" aria-label="身份信号">
+          <span class="avatar">
+            <img src="assets/latent-avocado-avatar.png" alt="戴墨镜坐在潜空间工作台上的鳄梨" />
+          </span>
+          <span class="tag green">朋友们也叫我鳄梨</span>
+          <span class="tag">v0.2 narrative</span>
+          <span class="tag gold">Experiments in progress</span>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">Identity + Research Coordinate</p>
+          <h1 id="home-title">Harnessing Models into External Brains</h1>
+          <p class="hero-role">我在研究如何把模型能力组织成两类真实系统。</p>
+          <p class="hero-thesis">
+            一类是可拆解、可编排、可复用、可评估的自动化工作流；另一类是长期在场、共享上下文、陪人思考和创造的外脑。
+          </p>
+          <p class="hero-support">
+            当前我的实践聚焦 Agent Harness：让模型、上下文、记忆、工具、技能、控制、评估和 workflow，以可运行、可治理、可复盘的方式进入现实世界。
+          </p>
+          <div class="hero-actions" aria-label="首页入口">
+            <a class="primary" href="#atlas">查看系统框架</a>
+            <a href="#factory">项目实验</a>
+            <a href="#far-fields">阅读思考</a>
+          </div>
+        </div>
+
+        <aside class="coordinate-panel" aria-label="研究坐标">
+          <div class="panel-header">
+            <span class="panel-label">Model -> Harness -> World</span>
+            <p class="panel-title">Research coordinate</p>
+          </div>
+          <div class="coordinate-flow">
+            <div class="flow-cell">
+              <span>Input</span>
+              <strong>Model capability</strong>
+              <p>能力增长只是起点；关键是组织、约束、保存和验证。</p>
+            </div>
+            <div class="flow-cell">
+              <span>Harness</span>
+              <strong>Context / Memory / Tools / Skills / Control / Eval</strong>
+              <p>把模型放进真实任务、权限、反馈和可追溯过程。</p>
+            </div>
+            <div class="flow-cell">
+              <span>Outputs</span>
+              <strong>Workflow factory / External brain</strong>
+              <p>一边通向自动化产线，一边通向长期在场的认知延伸。</p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span class="tag">Prototype map</span>
+            <span class="tag green">Latent workspace signal</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main id="main">
+      <section class="section" id="blind-zone" aria-labelledby="blind-title">
+        <div class="shell section-grid">
+          <div class="section-head">
+            <p class="eyebrow">01 / Historical Blind Zone</p>
+            <h2 id="blind-title">我们都在历史盲区里摸索</h2>
+            <p>
+              把 AI 当做生产力工具，可能是最浪费、也最遗憾的认知局限。它真正的潜力，是文明级别的范式重构者。
+            </p>
+          </div>
+          <div>
+            <p class="lead">
+              更强工具已经被验证。但如果 AI 真的是一种新智能形态，它带来的变化可能会继续向三个层面展开：
+            </p>
+            <div class="insight-grid" aria-label="三层重构">
+              <article class="insight-card">
+                <div class="metric"><strong>01</strong><span>Work</span></div>
+                <h3>重构工作：业务自动化工厂</h3>
+                <p>AI 不只是增强单个工具，而是把复杂知识工作重构成可编排、可复用、可评估的生产系统。</p>
+              </article>
+              <article class="insight-card">
+                <div class="metric"><strong>02</strong><span>Relation</span></div>
+                <h3>重构人机关系：永远在场的外脑</h3>
+                <p>Agent 不只是等待指令的助理，而是共享上下文、保持记忆、长期在场的人类认知延展。</p>
+              </article>
+              <article class="insight-card">
+                <div class="metric"><strong>03</strong><span>Civilization</span></div>
+                <h3>重构文明范式：四个长期方向</h3>
+                <p>当 Agent 真正成为外脑，它也许会进一步放大人类理解、创造、记忆和表达的能力。</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="factory" aria-labelledby="factory-title">
+        <div class="shell section-grid">
+          <div class="section-head">
+            <p class="eyebrow">02 / Automation Factory</p>
+            <h2 id="factory-title">知识工作：从手工业到自动化工业</h2>
+            <p>
+              Agent 带来的变化，不只是多几个执行者，而是知识工作的生产条件变了：信息可以被保留，协作可以异步，审计可以自动化，产线可以持续进化。
+            </p>
+          </div>
+          <div class="change-list" aria-label="五个结构性变化">
+            <article class="change-row">
+              <span class="num">01</span>
+              <h3>信息压缩从不可逆，变成可追溯</h3>
+              <p>摘要不再是终点，而是索引；任何压缩后的信息，都应该能回到原始材料。</p>
+            </article>
+            <article class="change-row">
+              <span class="num">02</span>
+              <h3>协作从人类分工，变成 Agent 编排</h3>
+              <p>按目标、状态、上下文、工具能力、风险等级和验证路径来组织，而不是简单模仿人类部门。</p>
+            </article>
+            <article class="change-row">
+              <span class="num">03</span>
+              <h3>审计从人工抽查，变成自动化监督</h3>
+              <p>用目标、约束、检查点和证据链减轻人的审计负担，同时保持产出可控。</p>
+            </article>
+            <article class="change-row">
+              <span class="num">04</span>
+              <h3>质量从感觉不错，变成约束与验证</h3>
+              <p>质量不应只依赖“模型这次表现不错”，而要经过规则、测试、工具返回值、权限边界和最终验收。</p>
+            </article>
+            <article class="change-row">
+              <span class="num">05</span>
+              <h3>经验从沉淀，变成产线自我进化</h3>
+              <p>失败案例、审计结果、用户反馈和优秀流程，都应该变成下一次工作的默认能力。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="external-brain" aria-labelledby="brain-title">
+        <div class="shell">
+          <div class="section-grid">
+            <div class="section-head">
+              <p class="eyebrow">03 / Always-present External Brain</p>
+              <h2 id="brain-title">永远在场的外脑</h2>
+            </div>
+            <p class="lead">
+              个人 Agent 不应该只是助理、员工，或者另一个与你二元对立的主体。它应该是你的认知和执行器官延伸：一直在场，与你共享上下文，协同思考，并在合适的时候主动出现和行动。
+            </p>
+          </div>
+
+          <div class="presence-grid" aria-label="外脑核心概念">
+            <article class="presence-card">
+              <span class="tag">Presence</span>
+              <h3>在场</h3>
+              <p>不是一轮一轮的对话，也不是每次都等任务触发，而是 realtime 一直都在。给出反应和保持沉默，都是 Agent 的选择。</p>
+            </article>
+            <article class="presence-card">
+              <span class="tag">Context</span>
+              <h3>共享上下文</h3>
+              <p>尽量减少人到 Agent 之间的信息搬运；raw data 应该在授权和边界内由 Agent 自动获取。</p>
+            </article>
+            <article class="presence-card">
+              <span class="tag">Perception</span>
+              <h3>感知延伸</h3>
+              <p>设备日志、软件状态、环境信息、穿戴设备里的生理信息，都可以成为 Agent 的感知输入。</p>
+            </article>
+            <article class="presence-card">
+              <span class="tag">Cognition</span>
+              <h3>协同认知</h3>
+              <p>好的个人 Agent，不只是替人解释世界，而是帮助人看见自己正在经历什么。</p>
+            </article>
+          </div>
+
+          <div class="lume-band" aria-label="Lume 当前探索">
+            <div>
+              <p class="eyebrow">Current Probe</p>
+              <h3>Lume / Product Surface Exploration</h3>
+              <p>
+                Lume 是我对“外脑式 Agent 产品表面”的下一阶段探索：如果 Agent 要长期在场，它应该如何被看见、被唤起、被信任，又如何在不打扰人的情况下持续提供帮助？
+              </p>
+            </div>
+            <div class="lume-status">
+              <span class="tag gold">WIP</span>
+              <span class="tag">Not primary proof yet</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="far-fields" aria-labelledby="far-title">
+        <div class="shell section-grid">
+          <div class="section-head">
+            <p class="eyebrow">04 / Far Fields</p>
+            <h2 id="far-title">四个远方</h2>
+            <p>
+              这些远方不需要在首页被证明。它们只说明一件事：我做 Agent，不只是为了提高效率，也是在追逐更长期的人类能力扩展。
+            </p>
+          </div>
+          <div class="future-grid">
+            <details class="future-card" open>
+              <summary>
+                <div class="future-top">
+                  <span>01</span>
+                  <strong>跨学科概念搜索引擎和翻译器</strong>
+                </div>
+                <p>搜索的不是词，也不只是语义相似度，而是想法之间的结构关系。</p>
+              </summary>
+              <div class="future-body">
+                <p>
+                  它不只是翻译术语，而是翻译思维方式：把一个领域的推理链，重新表述成另一个领域可以消化的认知框架，同时保持逻辑结构不变。
+                </p>
+              </div>
+            </details>
+            <details class="future-card">
+              <summary>
+                <div class="future-top">
+                  <span>02</span>
+                  <strong>毫无匮乏的创作空间</strong>
+                </div>
+                <p>让普通人也能把模糊念头一路变成作品、产品、组织、实验或生活系统。</p>
+              </summary>
+              <div class="future-body">
+                <p>
+                  它陪一个想法跨过表达、设计、执行、反馈和迭代，直到它从脑海里的模糊念头变成可被别人体验的东西。
+                </p>
+              </div>
+            </details>
+            <details class="future-card">
+              <summary>
+                <div class="future-top">
+                  <span>03</span>
+                  <strong>历史显微镜与文明理解机器</strong>
+                </div>
+                <p>把事实、机制、争论、证据边界和验证路径组织成可追问、可校验的理解网络。</p>
+              </summary>
+              <div class="future-body">
+                <p>
+                  让人不只从压缩过的历史结论里学习，而是能重新追问过程、边界、隐含前提和局部经验。
+                </p>
+              </div>
+            </details>
+            <details class="future-card">
+              <summary>
+                <div class="future-top">
+                  <span>04</span>
+                  <strong>外化的意识表达空间</strong>
+                </div>
+                <p>创造一种比语言更高维、但仍有边界感的表达媒介。</p>
+              </summary>
+              <div class="future-body">
+                <p>
+                  不是读心术，而是一种安全的外化空间：让人的内在状态可以被呈现、调整、分享和重新理解。
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="atlas" aria-labelledby="atlas-title">
+        <div class="shell section-grid">
+          <div class="section-head">
+            <p class="eyebrow">05 / Harness Atlas</p>
+            <h2 id="atlas-title">Harness Atlas</h2>
+            <p>
+              Agent Harness 不是几个工具，而是一张从 core loop 到真实 workflow、再到外脑系统的能力地图。它不是成熟产品清单，而是持续展开的实验空间。
+            </p>
+          </div>
+
+          <div class="atlas">
+            <div class="atlas-legend" aria-label="节点状态图例">
+              <span class="legend-chip status-gap">Gap</span>
+              <span class="legend-chip">Explored</span>
+              <span class="legend-chip status-prototype">Prototype</span>
+              <span class="legend-chip status-article">Article-backed</span>
+              <span class="legend-chip status-used">Used often</span>
+              <span class="legend-chip status-wip">WIP</span>
+              <span class="legend-chip status-early">Early</span>
+            </div>
+
+            <div class="atlas-map" aria-label="Agent Harness 能力地图">
+              <section class="atlas-layer" aria-labelledby="runtime-map-title">
+                <div class="atlas-layer-head">
+                  <span>Layer 1</span>
+                  <strong id="runtime-map-title">Agent Core Runtime</strong>
+                </div>
+                <div class="atlas-node-list">
+                  <button class="atlas-node" type="button" aria-label="Orchestration Loop, Gap">
+                    <span class="node-row"><span class="node-name">Orchestration Loop</span><span class="node-status status-gap">Gap</span></span>
+                    <span class="node-popover"><strong>Orchestration Loop</strong><p>编排循环 / TAO-ReAct 心跳，决定 Agent 如何一轮一轮推进任务。</p><span class="node-related">Runtime loop / partial practice</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Prompt Construction, Gap">
+                    <span class="node-row"><span class="node-name">Prompt Construction</span><span class="node-status status-gap">Gap</span></span>
+                    <span class="node-popover"><strong>Prompt Construction</strong><p>提示词组装、指令优先级、上下文摆放；每轮真正交给模型的工作台。</p><span class="node-related">Skill-level practice</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Context Management, Explored">
+                    <span class="node-row"><span class="node-name">Context Management</span><span class="node-status">Explored</span></span>
+                    <span class="node-popover"><strong>Context Management</strong><p>上下文压缩、检索、隐藏旧输出、避免上下文变脏。</p><span class="node-related">agent-recall / apex-memory</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Output Parsing, Gap">
+                    <span class="node-row"><span class="node-name">Output Parsing</span><span class="node-status status-gap">Gap</span></span>
+                    <span class="node-popover"><strong>Output Parsing</strong><p>工具调用、结构化输出、最终回答判断；更应依赖原生 tool calls 和结构化输出。</p><span class="node-related">Clear gap</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="State Management, Explored">
+                    <span class="node-row"><span class="node-name">State Management</span><span class="node-status">Explored</span></span>
+                    <span class="node-popover"><strong>State Management</strong><p>session、checkpoint、progress file、previous_response_id，让长任务可恢复、可调试。</p><span class="node-related">Long-task practice</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Error Handling, Gap">
+                    <span class="node-row"><span class="node-name">Error Handling</span><span class="node-status status-gap">Gap</span></span>
+                    <span class="node-popover"><strong>Error Handling</strong><p>重试、可修复错误 observation、用户介入、未知错误，需要分层处理。</p><span class="node-related">Clear gap</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Lifecycle Termination, Gap">
+                    <span class="node-row"><span class="node-name">Lifecycle / Termination</span><span class="node-status status-gap">Gap</span></span>
+                    <span class="node-popover"><strong>Lifecycle / Termination</strong><p>终止条件、中断、续跑、长任务恢复；包括预算耗尽、拒绝和 checkpoint。</p><span class="node-related">Partial practice</span></span>
+                  </button>
+                </div>
+              </section>
+
+              <section class="atlas-layer" aria-labelledby="product-map-title">
+                <div class="atlas-layer-head">
+                  <span>Layer 2</span>
+                  <strong id="product-map-title">Product-grade Harness</strong>
+                </div>
+                <div class="atlas-node-list">
+                  <button class="atlas-node" type="button" aria-label="Tools, Explored">
+                    <span class="node-row"><span class="node-name">Tools</span><span class="node-status">Explored</span></span>
+                    <span class="node-popover"><strong>Tools</strong><p>工具注册、schema、参数校验、权限检查、沙箱执行、结果转 observation。</p><span class="node-related">Skills / MCP / IM bridges</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Memory, Article-backed">
+                    <span class="node-row"><span class="node-name">Memory</span><span class="node-status status-article">Article</span></span>
+                    <span class="node-popover"><strong>Memory</strong><p>短期历史、长期项目知识、用户偏好、历史决策；记忆是线索，行动前仍要核实现实。</p><span class="node-related">agent-recall</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Guardrails and Safety, Prototype">
+                    <span class="node-row"><span class="node-name">Guardrails & Safety</span><span class="node-status status-prototype">Proto</span></span>
+                    <span class="node-popover"><strong>Guardrails & Safety</strong><p>输入输出护栏、工具调用护栏、权限确认、危险操作拦截。</p><span class="node-related">agent-guard / SkillScanner</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Verification Loops, Prototype">
+                    <span class="node-row"><span class="node-name">Verification Loops</span><span class="node-status status-prototype">Proto</span></span>
+                    <span class="node-popover"><strong>Verification Loops</strong><p>测试、截图验证、LLM-as-judge、目标验收，避免“看起来完成”。</p><span class="node-related">product-goal-based-audit</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Subagent Orchestration, Prototype">
+                    <span class="node-row"><span class="node-name">Subagent Orchestration</span><span class="node-status status-prototype">Proto</span></span>
+                    <span class="node-popover"><strong>Subagent Orchestration</strong><p>子 Agent、specialist、worktree、handoff、状态图；核心风险是意图漂移。</p><span class="node-related">apex-manager</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Skill Lifecycle, Used often">
+                    <span class="node-row"><span class="node-name">Skill Lifecycle</span><span class="node-status status-used">Used</span></span>
+                    <span class="node-popover"><strong>Skill Lifecycle</strong><p>技能安装、扫描、组合、版本、演化、废弃、治理。</p><span class="node-related">SkillScanner / alchemist-skill</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Workflow Integration, Explored">
+                    <span class="node-row"><span class="node-name">Workflow Integration</span><span class="node-status">Explored</span></span>
+                    <span class="node-popover"><strong>Workflow Integration</strong><p>IM、文档、IDE、任务系统、业务系统；Agent 进入人已经工作的界面。</p><span class="node-related">Agents-To-IM / feishu-agent-router</span></span>
+                  </button>
+                </div>
+              </section>
+
+              <section class="atlas-layer" aria-labelledby="brain-map-title">
+                <div class="atlas-layer-head">
+                  <span>Layer 3</span>
+                  <strong id="brain-map-title">External Brain Extensions</strong>
+                </div>
+                <div class="atlas-node-list">
+                  <button class="atlas-node" type="button" aria-label="Reversible Compression, Early">
+                    <span class="node-row"><span class="node-name">Reversible Compression</span><span class="node-status status-early">Early</span></span>
+                    <span class="node-popover"><strong>Reversible Compression</strong><p>摘要是索引，不是事实替代；压缩后能回到 raw data。</p><span class="node-related">apex-memory</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Intent Preservation, Article-backed">
+                    <span class="node-row"><span class="node-name">Intent Preservation</span><span class="node-status status-article">Article</span></span>
+                    <span class="node-popover"><strong>Intent Preservation</strong><p>多 Agent 分工中保存原始目标、边界、取舍和判断理由。</p><span class="node-related">apex-manager</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Automated Audit, Prototype">
+                    <span class="node-row"><span class="node-name">Automated Audit</span><span class="node-status status-prototype">Proto</span></span>
+                    <span class="node-popover"><strong>Automated Audit</strong><p>用目标、约束、检查点和证据链减轻人的审计负担。</p><span class="node-related">product-goal-based-audit</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Cognitive Base, Article-backed">
+                    <span class="node-row"><span class="node-name">Cognitive Base</span><span class="node-status status-article">Article</span></span>
+                    <span class="node-popover"><strong>Cognitive Base</strong><p>instruction、memory policy、domain priors、思考框架的可复用认知底座。</p><span class="node-related">meta-cogbase</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Constraint Internalization, Prototype">
+                    <span class="node-row"><span class="node-name">Constraint Internalization</span><span class="node-status status-prototype">Proto</span></span>
+                    <span class="node-popover"><strong>Constraint Internalization</strong><p>让专家模式、约束和判断标准被自动内化进 skill。</p><span class="node-related">mojo-skill-creator</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Skill Remix Alchemy, Used often">
+                    <span class="node-row"><span class="node-name">Skill Remix / Alchemy</span><span class="node-status status-used">Used</span></span>
+                    <span class="node-popover"><strong>Skill Remix / Alchemy</strong><p>把多个 skill、方法论和约束 remix 成新的工作能力。</p><span class="node-related">alchemist-skill</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Presence Product Surface, WIP">
+                    <span class="node-row"><span class="node-name">Presence / Product Surface</span><span class="node-status status-wip">WIP</span></span>
+                    <span class="node-popover"><strong>Presence / Product Surface</strong><p>Agent 如何被看见、被唤起、被信任，以及如何保持沉默。</p><span class="node-related">Lume</span></span>
+                  </button>
+                  <button class="atlas-node" type="button" aria-label="Thinking Skills, Used often">
+                    <span class="node-row"><span class="node-name">Thinking Skills</span><span class="node-status status-used">Used</span></span>
+                    <span class="node-popover"><strong>Thinking Skills</strong><p>第一性原理、跨学科思考、自主实验循环、提出好问题。</p><span class="node-related">first-principles / better-question</span></span>
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            <p class="map-note">
+              这张图的价值不在于每个节点都已经成熟，而在于把 Agent 从模型调用到真实系统、再到外脑形态的空间摊开。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section closing" id="contact" aria-labelledby="contact-title">
+        <div class="shell closing-grid">
+          <div>
+            <p class="eyebrow">06 / Keep Asking</p>
+            <h2 id="contact-title">一起继续追问</h2>
+            <p>
+              如果你也在思考 Agent 如何从模型能力走向真实系统、自动化工作流和人类外脑，我很愿意交流。
+            </p>
+            <p>
+              我尤其关心 Agent runtime、Harness、memory、workflow integration、automated audit、external brain，以及 fintech / investment agents。
+            </p>
+          </div>
+          <aside class="contact-panel" aria-label="联系入口">
+            <span class="panel-label">Signal channel</span>
+            <div class="contact-links">
+              <a href="https://github.com/d-wwei">GitHub <small>d-wwei</small></a>
+              <span>LinkedIn <small>待补 URL</small></span>
+              <span>Site status <small>持续变化中</small></span>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll(".atlas-node").forEach((node) => {
+        const open = () => {
+          node.classList.add("is-open");
+          node.setAttribute("aria-expanded", "true");
+        };
+        const close = () => {
+          node.classList.remove("is-open");
+          node.setAttribute("aria-expanded", "false");
+        };
+
+        node.setAttribute("aria-expanded", "false");
+        node.addEventListener("mouseenter", open);
+        node.addEventListener("mouseleave", close);
+        node.addEventListener("focus", open);
+        node.addEventListener("blur", close);
+        node.addEventListener("click", open);
+        node.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            close();
+            node.blur();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
