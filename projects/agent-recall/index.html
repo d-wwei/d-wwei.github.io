@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>agent-recall Case Study | Eli Wang</title><meta name="description" content="Persistent memory and session continuity across AI coding agents, tools, projects, and users."><link rel="canonical" href="https://d-wwei.github.io/projects/agent-recall/"><meta property="og:title" content="agent-recall Case Study | Eli Wang"><meta property="og:description" content="Persistent memory and session continuity across AI coding agents, tools, projects, and users."><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/projects/agent-recall/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/">  <span class="brand-copy"> <strong>Eli Wang</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/stack">Stack</a><a href="/projects" aria-current="page">Projects</a><a href="/writing">Writing</a><a href="/about">About</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/agent-recall/" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/agent-recall/" aria-current="false">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>agent-recall</h1> <p class="lede">Persistent memory and session continuity across AI coding agents, tools, projects, and users.</p> <div class="case-meta"> <span class="badge accent">Memory</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/agent-recall">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>AI coding agents forget the work context between sessions. They also fragment memory across tools: Claude Code knows one thing, Codex another, Cursor another, and Gemini another. The user becomes the memory bus.</p>
+<p>That does not scale if Agents are expected to become persistent collaborators rather than disposable chat windows.</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>Real Agent products need continuity. They need to know who the user is, what project is active, what the current task was, what has already been tried, and what knowledge should be promoted from a project to global memory.</p>
+<p>Without a memory harness, every new session pays the same context reconstruction tax. Worse, important preferences and project facts stay trapped inside one tool or one transcript.</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>Agent memory is not chat history. It is structured continuity across tools, sessions, projects, users, persona, active tasks, retrieval, and promotion.</p>
+<p>A useful memory layer should be platform-agnostic at the core and adapter-specific at the edges.</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>The product judgment was to separate memory semantics from any single agent host. Rather than treating one tool as canonical, <code>agent-recall</code> treats memory as shared infrastructure that different coding agents can read from and write to.</p>
+<p>The second judgment was to split memory into layers: global user memory, project-scoped observations, active task recovery, session archives, and promotion rules. That keeps memory useful without turning it into an undifferentiated transcript dump.</p>
+<h2 id="architecture">Architecture</h2>
+<p>The architecture has a thin adapter layer for agent platforms and a shared core underneath:</p>
+<ol>
+<li>Platform adapters for Claude Code, Cursor, Codex CLI, Gemini CLI, OpenCode, and related hosts.</li>
+<li>A local worker HTTP API.</li>
+<li>Business logic for persona, bootstrap interview, active task recovery, memory layering, promotion, archives, and search.</li>
+<li>SQLite / FTS-based storage with optional vector search where configured.</li>
+</ol>
+<p>The core idea is that most memory behavior should be platform-agnostic. Each new host should need a thin adapter, not a new memory product.</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>I chose structured summaries over raw transcript storage as the primary memory unit. Raw logs are too noisy for every new session; structured observations are easier to inject, search, and promote.</p>
+<p>I also treated “who the Agent is” and “who the user is” as product primitives. That can sound soft, but it changes behavior: a long-lived assistant needs a stable collaboration profile and a way to recover active work.</p>
+<p>The tradeoff is complexity. Memory systems can become intrusive or stale. That is why scoping, promotion policy, and explicit recovery flows matter.</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>Shared memory across Claude Code, Cursor, Codex CLI, Gemini CLI, and OpenCode.</li>
+<li>Lifecycle hook capture for tool executions.</li>
+<li>AI compression into structured observations.</li>
+<li>Context injection at session start.</li>
+<li>Agent persona and user profile bootstrap.</li>
+<li>Active task recovery.</li>
+<li>Global and project-scoped memory layers.</li>
+<li>Memory promotion from project facts to reusable global knowledge.</li>
+<li>Searchable archives and temporal recall.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>The repo describes a shared SQLite database used across multiple agent platforms. It includes platform adapters, a worker API, persona/bootstrap/recovery logic, memory layering, promotion, archives, and search.</p>
+<p>The README states that 70-80% of the code is platform-agnostic and that new platforms should only require a thin adapter. That supports the product thesis that memory belongs to the harness, not to a single model UI.</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Memory quality is mostly a product problem. The hard questions are what to capture, when to compress, what to inject, when to promote, and how to prevent stale or overbroad context from polluting new work.</p>
+<p>The memory layer also reveals a bigger principle: Agent continuity should be explicit infrastructure, not an accidental side effect of longer context windows.</p>
+<h2 id="status">Status</h2>
+<p>Alpha / usable prototype. The core pipeline and platform model exist, but the product should continue improving observation quality, adapter validation, and memory governance.</p>
+<h2 id="next">Next</h2>
+<p>The next step is stronger evaluation for memory usefulness: whether injected context actually helps the Agent resume work, avoid repeated mistakes, and preserve user/project preferences without overfitting to old state.</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli Wang</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>Detailed background: available after contact</span> </div> </div> </footer> </body></html>

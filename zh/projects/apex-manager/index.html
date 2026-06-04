@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>apex-manager Case Study | Eli Wang</title><meta name="description" content="跨终端会话调度并行 AI Worker 的多 Agent 编排案例。"><link rel="canonical" href="https://d-wwei.github.io/zh/projects/apex-manager/"><meta property="og:title" content="apex-manager Case Study | Eli Wang"><meta property="og:description" content="跨终端会话调度并行 AI Worker 的多 Agent 编排案例。"><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/zh/projects/apex-manager/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/zh/">  <span class="brand-copy"> <strong>Eli</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/zh/stack">框架</a><a href="/zh/projects" aria-current="page">项目</a><a href="/zh/writing">写作</a><a href="/zh/about">关于</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/apex-manager/" aria-current="false">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/apex-manager/" aria-current="true">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>apex-manager</h1> <p class="lede">跨终端会话调度并行 AI Worker 的多 Agent 编排案例。</p> <div class="case-meta"> <span class="badge accent">Orchestration</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/apex-manager">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>很多多 Agent 产品会直接复制人类组织架构：PM Agent、架构师 Agent、开发 Agent、测试 Agent。表面上分工很完整，实际却因为不断交接而丢失上下文。</p>
+<p>真正的问题不是角色数量，而是如何在多个完整 Worker 并行推进时保住全局意图、任务状态、依赖顺序和隔离。</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>真实工程任务里，并行会带来文件冲突、重复劳动、依赖混乱和责任不清。Agent Harness 需要把这些问题显式化，而不是靠聊天窗口记住。</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>多 Agent 编排不应该是角色扮演，而应该是 Team Kernel：Plan Agent 保持全局意图，Worker 独立完成完整任务闭环，验证作为对抗性工作模式存在。</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>我的判断是先做状态和控制语义，而不是先做 dashboard。<code>apex-manager</code> 因此是 terminal-first、local-first，站在已有 Claude / Codex / Gemini CLI 之上。</p>
+<h2 id="architecture">Architecture</h2>
+<p>四层结构：</p>
+<ol>
+<li>Plan Agent：拆任务、排依赖、分配 Worker、综合结果。</li>
+<li>Worker：理解、实现、验证、自查和汇报。</li>
+<li>Review mode：独立评审和对抗检查，而不是继续接棒生产。</li>
+<li>Daemon / State：通过 <code>.apex-manager/</code> 维护 task、message、artifact、event。</li>
+</ol>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>我选择轻量编排层，而不是重后台；选择显式自动化，而不是默认加入 full-auto 或 yolo 权限绕过。</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>本地多 Agent 编排器。</li>
+<li>task / dependency / message / artifact / event 语义。</li>
+<li>daemon 和状态账本。</li>
+<li>worktree-oriented 并行隔离。</li>
+<li>terminal / tmux 友好的运行方式。</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>公开 repo 把它描述为跨终端 session 管理并行 AI Worker 的独立 multi-agent orchestrator，并强调 Plan Agent、完整 Worker、独立评审和 <code>.apex-manager/</code> 状态层。</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>多 Agent 的难点不是多开几个模型，而是在并行时维持意图、状态和责任。</p>
+<h2 id="status">Status</h2>
+<p>Prototype / usable local orchestrator。</p>
+<h2 id="next">Next</h2>
+<p>下一步是强化 task/artifact 语义、review workflow、运行历史，并为 MCP / A2A / ACP 等 transport 留接口。</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>详细背景：建立联系后提供</span> </div> </div> </footer> </body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>agent-recall Case Study | Eli Wang</title><meta name="description" content="跨 AI coding agent、工具、项目和会话的持久记忆与连续性案例。"><link rel="canonical" href="https://d-wwei.github.io/zh/projects/agent-recall/"><meta property="og:title" content="agent-recall Case Study | Eli Wang"><meta property="og:description" content="跨 AI coding agent、工具、项目和会话的持久记忆与连续性案例。"><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/zh/projects/agent-recall/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/zh/">  <span class="brand-copy"> <strong>Eli</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/zh/stack">框架</a><a href="/zh/projects" aria-current="page">项目</a><a href="/zh/writing">写作</a><a href="/zh/about">关于</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/agent-recall/" aria-current="false">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/agent-recall/" aria-current="true">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>agent-recall</h1> <p class="lede">跨 AI coding agent、工具、项目和会话的持久记忆与连续性案例。</p> <div class="case-meta"> <span class="badge accent">Memory</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/agent-recall">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>AI coding agent 会在会话之间失忆，也会在不同工具之间形成记忆孤岛。用户被迫成为所有工具之间的 memory bus。</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>真正的 Agent 产品需要知道用户是谁、项目是什么、当前任务进展到哪里、哪些事实应保留在项目内、哪些知识应提升为全局记忆。</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>Agent memory 不是聊天记录，而是跨工具、跨 session、跨项目、跨用户画像、persona、active task 和 retrieval 的结构化连续性。</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>核心判断是把 memory 语义从单一 Agent host 中抽出来，让不同工具共享同一套 memory infrastructure。</p>
+<h2 id="architecture">Architecture</h2>
+<p>结构包括：</p>
+<ol>
+<li>多平台 adapter：Claude Code、Cursor、Codex CLI、Gemini CLI、OpenCode。</li>
+<li>本地 worker HTTP API。</li>
+<li>persona、bootstrap、recovery、memory layering、promotion、archives 和 search。</li>
+<li>SQLite / FTS 存储，可选 vector search。</li>
+</ol>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>我选择结构化 summary，而不是直接把 transcript 当作记忆；选择 global / project 分层和 promotion policy，避免记忆变成噪声。</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>跨多个 coding agent 的共享记忆。</li>
+<li>tool execution hook 捕获。</li>
+<li>AI 压缩观察结果。</li>
+<li>session start 上下文注入。</li>
+<li>persona / user profile bootstrap。</li>
+<li>active task recovery。</li>
+<li>memory promotion 和 searchable archives。</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>公开 repo 描述了共享 SQLite、多平台 adapter、worker API、persona/bootstrap/recovery、memory layering、promotion、archives 和 search。</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Memory 质量主要是产品问题：捕获什么、何时压缩、注入什么、何时提升、如何避免过期上下文污染新任务。</p>
+<h2 id="status">Status</h2>
+<p>Alpha / usable prototype。</p>
+<h2 id="next">Next</h2>
+<p>下一步是评估 memory 注入是否真正帮助 Agent 恢复任务、减少重复错误，并保留用户和项目偏好。</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>详细背景：建立联系后提供</span> </div> </div> </footer> </body></html>

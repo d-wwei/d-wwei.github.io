@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SkillScanner Case Study | Eli Wang</title><meta name="description" content="面向 skill、MCP 和 prompt-level supply-chain risk 的可移植安全扫描案例。"><link rel="canonical" href="https://d-wwei.github.io/zh/projects/skillscanner/"><meta property="og:title" content="SkillScanner Case Study | Eli Wang"><meta property="og:description" content="面向 skill、MCP 和 prompt-level supply-chain risk 的可移植安全扫描案例。"><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/zh/projects/skillscanner/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/zh/">  <span class="brand-copy"> <strong>Eli</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/zh/stack">框架</a><a href="/zh/projects" aria-current="page">项目</a><a href="/zh/writing">写作</a><a href="/zh/about">关于</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/skillscanner/" aria-current="false">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/skillscanner/" aria-current="true">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>SkillScanner</h1> <p class="lede">面向 skill、MCP 和 prompt-level supply-chain risk 的可移植安全扫描案例。</p> <div class="case-meta"> <span class="badge accent">Security / Skills</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/SkillScanner">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>Agent skills 和 MCP tools 会带来新的供应链风险：隐藏指令、tool poisoning、数据外传、编码混淆、metadata poisoning 和 memory/state poisoning。</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>skill 生态会像包生态一样扩散，但攻击面不只是代码，也可能是 prompt、工具描述、MCP payload 或文档伪装。</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>Scanner 本身也可以是 skill。如果 Agent host 能读取 <code>SKILL.md</code>，安全能力就可以通过 instruction protocol 分发。</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>核心判断是优先 portability，而不是依赖深度。一个需要大模型下载或复杂环境的 scanner，很难保护轻量 Agent workflow。</p>
+<h2 id="architecture">Architecture</h2>
+<p>SkillScanner 是一个 <code>SKILL.md</code> 加 reference files。</p>
+<p>五层协议：</p>
+<ol>
+<li>Normalize。</li>
+<li>Pattern match。</li>
+<li>Semantic intent / archetype analysis。</li>
+<li>Context judge。</li>
+<li>Bucket-weighted verdict。</li>
+</ol>
+<p>三道 gate：input、tool-result、output。</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>我选择 pure-instruction、zero dependencies。代价是扫描质量依赖 host Agent 的推理能力，因此协议必须足够结构化。</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>单文件 skill scanner。</li>
+<li>scan protocol、threat catalog、attack cases、report templates、self-test。</li>
+<li>10 类 threat category。</li>
+<li>3-gate scanning architecture。</li>
+<li>5-layer protocol 和 bucket-weighted scoring。</li>
+<li>EN/ZH 双语支持。</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>公开 repo 描述了 universal AI agent skill security scanner、zero dependencies、bilingual EN/ZH、5-layer protocol、3-gate architecture 和 OWASP LLM Top 10 tags。</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Agent supply-chain security 需要理解 intent，而不只是匹配 syntax。</p>
+<h2 id="status">Status</h2>
+<p>Prototype / portable scanner。</p>
+<h2 id="next">Next</h2>
+<p>下一步是和 <code>agent-guard</code> 这类 runtime control 层连接，增加 corpus-level evaluation，并形成 skill 安装、更新、拒绝的治理流程。</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>详细背景：建立联系后提供</span> </div> </div> </footer> </body></html>

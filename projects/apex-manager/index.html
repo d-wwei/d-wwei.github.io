@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>apex-manager Case Study | Eli Wang</title><meta name="description" content="Multi-agent orchestration for parallel AI workers across terminal sessions."><link rel="canonical" href="https://d-wwei.github.io/projects/apex-manager/"><meta property="og:title" content="apex-manager Case Study | Eli Wang"><meta property="og:description" content="Multi-agent orchestration for parallel AI workers across terminal sessions."><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/projects/apex-manager/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/">  <span class="brand-copy"> <strong>Eli Wang</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/stack">Stack</a><a href="/projects" aria-current="page">Projects</a><a href="/writing">Writing</a><a href="/about">About</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/apex-manager/" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/apex-manager/" aria-current="false">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>apex-manager</h1> <p class="lede">Multi-agent orchestration for parallel AI workers across terminal sessions.</p> <div class="case-meta"> <span class="badge accent">Orchestration</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/apex-manager">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>Most multi-agent products start by copying a human org chart: one Agent plays PM, one plays architect, one writes code, one tests. The result looks organized, but the work often becomes worse as it passes through more role boundaries.</p>
+<p>The missing product problem is not “more roles.” It is preserving global intent while multiple full-stack workers move in parallel without stepping on each other.</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>Agent teams fail when context handoffs compress the real reasoning: why a path was chosen, which tradeoff was rejected, what is fragile, and what still needs review. For real engineering work, parallelism also creates file conflicts, duplicate effort, hidden task dependencies, and unclear ownership.</p>
+<p>An Agent harness needs orchestration semantics: task state, dependency order, worker isolation, artifact tracking, and independent review modes.</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>Multi-agent orchestration should behave less like a fake company and more like a local Team Kernel.</p>
+<p>The Plan Agent should keep global intent, split work, order dependencies, and synthesize results. Worker agents should remain complete engineers who can understand, implement, verify, and self-review their assigned task. Verification should be an adversarial work mode, not another lossy handoff stage.</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>The key product judgment was to avoid “role cosplay.” I treated orchestration as a control and state problem, not a character design problem.</p>
+<p>That led to a terminal-first, local-first system that sits above existing CLI agents instead of replacing them. The user keeps using Claude, Codex, Gemini, or other agent CLIs, while <code>apex-manager</code> provides shared task, message, artifact, and event semantics.</p>
+<h2 id="architecture">Architecture</h2>
+<p>The architecture has four layers:</p>
+<ol>
+<li>Plan Agent: holds global intent, breaks work into tasks, orders dependencies, assigns workers, and integrates results.</li>
+<li>Worker agents: run full task loops in isolated contexts.</li>
+<li>Review mode: sends independent workers to audit, test, or challenge outputs instead of continuing the production handoff chain.</li>
+<li>Daemon / state layer: externalizes coordination into <code>.apex-manager/</code> through tasks, messages, artifacts, and events.</li>
+</ol>
+<p>The project is terminal-first. When possible, workers can use separate worktrees so parallelism is backed by filesystem isolation, not just conversational agreement.</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>I chose a thin orchestration layer instead of a heavy dashboard. The goal was to make multi-agent work usable from the environment where coding agents already live: the terminal.</p>
+<p>I also avoided making auto-approval the default. A serious Agent orchestrator should not quietly add <code>--full-auto</code>, <code>--yolo</code>, or equivalent permission bypass behavior. Automation can exist, but it should be explicit and controlled.</p>
+<p>The current product surface is more kernel-like than manager-like: it prioritizes state, task dependency, and worker execution semantics over polished visual operations.</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>A local multi-agent orchestrator for parallel AI Worker agents across terminal sessions.</li>
+<li>Plan/worker workflow semantics with task creation and dependency ordering.</li>
+<li>A daemon and event ledger to keep task and worker state outside chat memory.</li>
+<li>Message and artifact coordination primitives.</li>
+<li>Worker isolation patterns, including worktree-oriented parallelism where applicable.</li>
+<li>Terminal and tmux-friendly execution flow for real local development work.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>The public repo describes <code>apex-manager</code> as an independent multi-agent orchestrator that manages parallel AI Worker agents across terminal sessions. Its README frames the system around a Plan Agent, complete Worker agents, independent review work, and a daemon/state layer in <code>.apex-manager/</code>.</p>
+<p>The repo also explicitly states that automatic full-auto or permission-skipping flags are not enabled by default. That is important evidence of the control philosophy behind the orchestrator.</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>The hardest part of multi-agent product design is not spawning more agents. It is preserving intent, state, and accountability as work becomes parallel.</p>
+<p>The strongest worker unit is usually not a narrow role. It is a complete task owner with enough context to reason, implement, verify, and report. The harness should make that safe and coordinated.</p>
+<h2 id="status">Status</h2>
+<p>Prototype / usable local orchestrator. It is strong enough to express the product thesis and run local multi-agent work, but it should still be treated as an evolving Team Kernel rather than a finished platform.</p>
+<h2 id="next">Next</h2>
+<p>The next product step is to harden task/artifact semantics, improve review workflows, add clearer run history, and prepare the kernel for richer transports such as MCP, A2A, ACP, or remote workers without losing terminal-native simplicity.</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli Wang</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>Detailed background: available after contact</span> </div> </div> </footer> </body></html>

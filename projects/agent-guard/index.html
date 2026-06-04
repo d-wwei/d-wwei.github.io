@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>agent-guard Case Study | Eli Wang</title><meta name="description" content="Deterministic security interception layer for AI Agents using low-latency gates outside the model loop."><link rel="canonical" href="https://d-wwei.github.io/projects/agent-guard/"><meta property="og:title" content="agent-guard Case Study | Eli Wang"><meta property="og:description" content="Deterministic security interception layer for AI Agents using low-latency gates outside the model loop."><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/projects/agent-guard/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/">  <span class="brand-copy"> <strong>Eli Wang</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/stack">Stack</a><a href="/projects" aria-current="page">Projects</a><a href="/writing">Writing</a><a href="/about">About</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/agent-guard/" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/agent-guard/" aria-current="false">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>agent-guard</h1> <p class="lede">Deterministic security interception layer for AI Agents using low-latency gates outside the model loop.</p> <div class="case-meta"> <span class="badge accent">Security / Control</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/agent-guard">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>Prompt rules are not a control system. A model can be instructed to behave safely, but important safety rules need enforcement outside the model’s own reasoning and prompt-following loop.</p>
+<p>At the same time, fully caging an Agent can make it useless. If every meaningful action becomes a confirmation dialog, the Agent becomes a script that needs a babysitter.</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>Real Agent products need to act. They need access to files, terminals, tools, secrets, and workflow systems. That means the product problem is not “never let the Agent do anything.” It is allowing useful work while gating irreversible or suspicious actions.</p>
+<p>Agent safety should be a harness capability: deterministic, low-latency, auditable, and difficult for the Agent to bypass.</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>Security should sit in the pipeline, not inside the Agent’s self-description.</p>
+<p>The Agent can propose actions, but every sensitive action should pass through deterministic gates that evaluate command risk, path sensitivity, trust, anomaly, and combined signals before execution.</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>The core judgment was to move from prompt-based safety to hook-based control. A hook sees the actual tool call. The model cannot negotiate with it, forget it, or rephrase around it.</p>
+<p>The second judgment was to use layered defense. No single rule catches every risk. A harness needs multiple independent layers whose blind spots do not align.</p>
+<h2 id="architecture">Architecture</h2>
+<p><code>agent-guard</code> installs as Claude Code <code>PreToolUse</code> and <code>PostToolUse</code> hooks.</p>
+<p>The engine has five layers:</p>
+<ol>
+<li>Hard rules for deterministic known-risk patterns.</li>
+<li>Path safety for file and directory sensitivity.</li>
+<li>Trust evaluation based on safe operation history and violations.</li>
+<li>Rate and anomaly detection for bursts or behavior shifts.</li>
+<li>Synthesis that aggregates signals in a Swiss Cheese style decision layer.</li>
+</ol>
+<p>The PostToolUse side also sanitizes credential-like output before it is returned to the Agent.</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>I chose deterministic hooks over MCP tools or prompt policies because tools and skills are still optional from the model’s point of view. A hook is in the execution path.</p>
+<p>I chose low-latency local checks over heavyweight ML scanning for the first layer. Agent control needs to run often, so the normal path must be cheap.</p>
+<p>I also avoided binary thinking. Some operations should be denied, some allowed, and some confirmed depending on path, trust, and signal combination.</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>A hook-based security interception layer for Agent tool calls.</li>
+<li>A 5-layer decision engine with hard rules, path safety, trust, anomaly, and synthesis.</li>
+<li>Built-in deterministic rules for dangerous commands, sensitive paths, credentials, and injection patterns.</li>
+<li>Credential sanitization for tool output.</li>
+<li>Trust management, audit log, rule management, and configuration commands.</li>
+<li>Benchmarks and test cases described in the repo documentation.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>The public repo describes <code>agent-guard</code> as a deterministic security interception layer with zero runtime dependencies, 32 built-in rules, a 5-layer Swiss Cheese engine, and P99 latency under 1ms for the full pipeline.</p>
+<p>The README explains why hook-based interception is different from MCP or skill-based safety: the Agent cannot see or bypass the hook in the same way it can ignore an optional instruction.</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Agent safety is a product design problem, not only a security checklist. The right user experience is not “block everything.” It is to preserve useful autonomy while making dangerous transitions deterministic, visible, and auditable.</p>
+<p>The most important shift is moving control from text to infrastructure.</p>
+<h2 id="status">Status</h2>
+<p>Prototype / usable security layer for Claude Code hook workflows. It demonstrates the control thesis clearly, but broader agent-host support and more adversarial validation would make it stronger.</p>
+<h2 id="next">Next</h2>
+<p>The next step is wider host compatibility, richer policy configuration, stronger false-positive analysis, and integration with skill/MCP scanners so runtime control and supply-chain review work together.</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli Wang</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>Detailed background: available after contact</span> </div> </div> </footer> </body></html>

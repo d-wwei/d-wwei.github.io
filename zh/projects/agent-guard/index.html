@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>agent-guard Case Study | Eli Wang</title><meta name="description" content="位于模型循环之外的确定性 Agent 安全与控制层案例。"><link rel="canonical" href="https://d-wwei.github.io/zh/projects/agent-guard/"><meta property="og:title" content="agent-guard Case Study | Eli Wang"><meta property="og:description" content="位于模型循环之外的确定性 Agent 安全与控制层案例。"><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/zh/projects/agent-guard/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/zh/">  <span class="brand-copy"> <strong>Eli</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/zh/stack">框架</a><a href="/zh/projects" aria-current="page">项目</a><a href="/zh/writing">写作</a><a href="/zh/about">关于</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/agent-guard/" aria-current="false">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/agent-guard/" aria-current="true">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>agent-guard</h1> <p class="lede">位于模型循环之外的确定性 Agent 安全与控制层案例。</p> <div class="case-meta"> <span class="badge accent">Security / Control</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/agent-guard">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>prompt 规则不是控制系统。真正重要的安全规则不能只靠模型记住和自觉遵守。</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>真实 Agent 产品需要能行动，也需要访问文件、终端、工具、密钥和 workflow。产品问题不是把 Agent 关死，而是在允许有用工作的同时卡住不可逆风险。</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>安全应该在执行管线里，而不是在 Agent 的自我描述里。Agent 可以提出动作，但敏感动作必须经过模型无法绕过的确定性门禁。</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>我的核心判断是从 prompt-based safety 转向 hook-based control。hook 看到真实 tool call，模型不能和它讨价还价。</p>
+<h2 id="architecture">Architecture</h2>
+<p><code>agent-guard</code> 通过 Claude Code <code>PreToolUse</code> / <code>PostToolUse</code> hooks 工作。</p>
+<p>五层引擎：</p>
+<ol>
+<li>hard rules。</li>
+<li>path safety。</li>
+<li>trust evaluation。</li>
+<li>rate anomaly。</li>
+<li>synthesis。</li>
+</ol>
+<p>PostToolUse 还会做 credential sanitizer。</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>我选择低延迟、确定性的本地 gate，而不是把所有风险都交给重模型判断。正常路径必须足够便宜，危险路径必须足够清楚。</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>hook-based tool call interception。</li>
+<li>5-layer decision engine。</li>
+<li>32 built-in rules。</li>
+<li>credential sanitization。</li>
+<li>trust、audit、rule management 和配置命令。</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>公开 repo 描述了 deterministic security interception layer、5-layer Swiss Cheese engine、32 built-in rules、zero dependencies 和低延迟 pipeline。</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Agent 安全不是“全部阻止”，而是在保留有用自治的同时，让危险转移变得确定、可见、可审计。</p>
+<h2 id="status">Status</h2>
+<p>Prototype / usable security layer。</p>
+<h2 id="next">Next</h2>
+<p>下一步是更广 agent host 支持、更强 false positive 分析，并与 SkillScanner 这类 supply-chain review 结合。</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>详细背景：建立联系后提供</span> </div> </div> </footer> </body></html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SkillScanner Case Study | Eli Wang</title><meta name="description" content="Portable pure-instruction scanner for skill, MCP, and prompt-level Agent supply-chain risk."><link rel="canonical" href="https://d-wwei.github.io/projects/skillscanner/"><meta property="og:title" content="SkillScanner Case Study | Eli Wang"><meta property="og:description" content="Portable pure-instruction scanner for skill, MCP, and prompt-level Agent supply-chain risk."><meta property="og:type" content="website"><meta property="og:url" content="https://d-wwei.github.io/projects/skillscanner/"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/_astro/Layout.C1sLTKS2.css"></head> <body> <a class="skip-link" href="#main-content">Skip to main content</a> <header class="site-header"> <div class="container header-inner"> <div class="brand-cluster"> <a class="brand" href="/">  <span class="brand-copy"> <strong>Eli Wang</strong> <span>Agent Harness Portfolio</span> </span> </a> </div> <div class="nav-cluster"> <nav class="nav-links" aria-label="Primary"> <a href="/stack">Stack</a><a href="/projects" aria-current="page">Projects</a><a href="/writing">Writing</a><a href="/about">About</a> </nav> <nav class="nav-actions" aria-label="External"> <a href="https://github.com/d-wwei">GitHub</a> </nav> <nav class="language-switch" aria-label="Language"> <a href="/projects/skillscanner/" aria-current="true">EN</a> <span aria-hidden="true">/</span> <a href="/zh/projects/skillscanner/" aria-current="false">中文</a> </nav> </div> </div> </header> <main id="main-content">  <header class="case-header"> <div class="reading prose"> <p class="eyebrow">Case File / Harness Evidence</p> <h1>SkillScanner</h1> <p class="lede">Portable pure-instruction scanner for skill, MCP, and prompt-level Agent supply-chain risk.</p> <div class="case-meta"> <span class="badge accent">Security / Skills</span> <span class="badge">case-study</span> <a class="badge" href="https://github.com/d-wwei/SkillScanner">GitHub repo</a> </div> </div> </header> <article class="reading prose">  <h2 id="problem">Problem</h2>
+<p>Agent skills and MCP tools create a new supply-chain surface. A skill can carry hidden instructions, tool poisoning, exfiltration logic, encoded payloads, or social engineering that targets the host Agent rather than the human reader.</p>
+<p>Most scanners assume code dependencies, models, or a specific runtime. But skills are often just instruction files that need to work across many Agent hosts.</p>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>As Agent ecosystems grow, skills can spread like packages. The risk profile begins to look like early npm, except the exploit language is not only code. It can be prompt text, metadata, tool descriptions, MCP payloads, or memory manipulation.</p>
+<p>A practical harness needs a portable scanner that can be installed into different Agent hosts and understand language-level threats, not just code signatures.</p>
+<h2 id="product-thesis">Product Thesis</h2>
+<p>The scanner itself can be a skill.</p>
+<p>If an Agent host can read <code>SKILL.md</code>, then a security scanner can be delivered as a pure instruction protocol. The host Agent becomes the semantic detection engine, while the skill supplies threat taxonomy, gates, scoring, and reporting discipline.</p>
+<h2 id="my-role--judgment">My Role / Judgment</h2>
+<p>The key product judgment was portability over dependency depth. A scanner that requires a large model download or language-specific setup will not protect lightweight agent workflows.</p>
+<p>The second judgment was to treat semantic detection as a first-class layer. Regex catches some attacks, but prompt-level threats often evade keyword matching by rephrasing intent.</p>
+<h2 id="architecture">Architecture</h2>
+<p>SkillScanner is a single <code>SKILL.md</code> plus reference files.</p>
+<p>The scanning protocol has five layers:</p>
+<ol>
+<li>Normalize content and decode obfuscation.</li>
+<li>Match known threat categories.</li>
+<li>Run semantic intent and structural archetype analysis.</li>
+<li>Judge local context and false-positive dampening.</li>
+<li>Produce a bucket-weighted risk verdict.</li>
+</ol>
+<p>It also defines three gates: input, tool-result, and output. That matters because indirect injection often arrives through tool results, not initial user input.</p>
+<h2 id="design-tradeoffs">Design Tradeoffs</h2>
+<p>I chose pure instructions and no dependencies. That makes the scanner portable and easy to install, but it means quality depends on the host Agent’s reasoning ability and the precision of the protocol.</p>
+<p>To compensate, the scanner uses layered evidence, explicit categories, OWASP tags, per-finding context judgment, and structured reporting. The protocol is the product.</p>
+<h2 id="what-i-built">What I Built</h2>
+<ul>
+<li>A portable security scanner delivered as <code>SKILL.md</code>.</li>
+<li>Reference files for scan protocol, threat catalog, attack cases, report templates, and self-tests.</li>
+<li>10 threat categories covering prompt injection, context manipulation, MCP tool poisoning, exfiltration, dangerous operations, metadata poisoning, and memory/state poisoning.</li>
+<li>A 3-gate scanning model across input, tool-result, and output.</li>
+<li>A 5-layer scan protocol with bucket-weighted risk scoring.</li>
+<li>Bilingual EN/ZH usage.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<p>The public repo describes SkillScanner as a universal AI agent skill security scanner with no dependencies and bilingual EN/ZH support. The README documents the 5-layer protocol, 3-gate architecture, 10 threat categories, structural archetypes, and risk scoring.</p>
+<p>The project is intentionally not a small command-line wrapper. It is an experiment in whether security capability can itself be packaged as a governed Agent skill.</p>
+<h2 id="what-i-learned">What I Learned</h2>
+<p>Agent supply-chain security needs to reason about intent, not just syntax. A malicious skill can look like documentation, a tutorial, a tool description, or a harmless helper until the host Agent treats it as instruction.</p>
+<p>The harness layer should review skills before installation, during tool-result ingestion, and before final output when leakage or compromised behavior is possible.</p>
+<h2 id="status">Status</h2>
+<p>Prototype / portable scanner. It is useful as a skill-security concept and working protocol, but should be tested against larger real-world skill and MCP corpora before being treated as production-grade.</p>
+<h2 id="next">Next</h2>
+<p>The next step is to connect SkillScanner with runtime control layers such as <code>agent-guard</code>, add corpus-level evaluation, and create clearer governance workflows for installing, updating, and rejecting Agent skills.</p>  </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <div> <strong>Eli Wang</strong> <div>Agent-native Product &amp; Harness Builder</div> </div> <div class="contact-links"> <a href="https://github.com/d-wwei">GitHub</a> <a href="https://www.linkedin.com/in/eli-wang-612555354/">LinkedIn</a> <span>Detailed background: available after contact</span> </div> </div> </footer> </body></html>
