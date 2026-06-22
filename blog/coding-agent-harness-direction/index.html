@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>从代码助手到工程工作系统：Coding Agent Harness 的产品方向思考</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --page: #edf2f7;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #d8e0ea;
+      --soft: #f5f7fb;
+      --accent: #2357ad;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 16.5px;
+      line-height: 1.86;
+      letter-spacing: 0;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: min(920px, calc(100% - 32px));
+      margin: 36px auto;
+      padding: 68px 74px 72px;
+      background: var(--paper);
+      border: 1px solid rgba(24, 32, 42, 0.08);
+      box-shadow: 0 24px 70px rgba(23, 31, 43, 0.10);
+    }
+
+    h1, h2, h3, h4 {
+      color: #111827;
+      letter-spacing: 0;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      margin: 0 0 34px;
+      max-width: 760px;
+      font-size: 32px;
+      line-height: 1.28;
+      font-weight: 760;
+    }
+
+    h2 {
+      margin: 54px 0 18px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 22px;
+      line-height: 1.38;
+      font-weight: 730;
+    }
+
+    h3 {
+      margin: 34px 0 12px;
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+      color: #1d2b3a;
+    }
+
+    h4 {
+      margin: 28px 0 8px;
+      font-size: 15.8px;
+      line-height: 1.5;
+      font-weight: 720;
+      color: #334155;
+    }
+
+    p {
+      margin: 0 0 15px;
+    }
+
+    p + p { margin-top: 2px; }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 13.5px;
+      line-height: 1.4;
+      font-weight: 720;
+    }
+
+    .lead {
+      margin-bottom: 18px;
+      color: #223044;
+      font-size: 18px;
+      line-height: 1.78;
+    }
+
+    .thesis,
+    .key-line {
+      margin: 22px 0 26px;
+      padding: 12px 0 12px 18px;
+      border-left: 3px solid var(--accent);
+      background: #f3f7fd;
+      color: #172033;
+      font-weight: 620;
+    }
+
+    .thesis span {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-size: 13.5px;
+      font-weight: 740;
+    }
+
+    .section-note {
+      margin: -4px 0 24px;
+      color: var(--muted);
+    }
+
+    .subhead {
+      margin: 0 0 14px;
+      color: #263548;
+      font-weight: 650;
+    }
+
+    .axis-figure {
+      margin: 22px 0 30px;
+      padding: 20px 22px 22px;
+      border: 1px solid #dfe5ee;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fbfcff 0%, #f6f8fb 100%);
+      page-break-inside: avoid;
+    }
+
+    .axis-figure figcaption {
+      margin: 0 0 14px;
+      color: #1d2b3a;
+      font-weight: 720;
+    }
+
+    .axis-chart {
+      position: relative;
+      min-height: 360px;
+      padding: 44px 42px 56px 68px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .axis-plane {
+      position: absolute;
+      inset: 42px 34px 52px 66px;
+      z-index: 0;
+      border-left: 2px solid #40536a;
+      border-bottom: 2px solid #40536a;
+      background:
+        linear-gradient(to right, rgba(36, 84, 166, 0.11) 1px, transparent 1px) 0 0 / 33.333% 100%,
+        linear-gradient(to bottom, rgba(36, 84, 166, 0.11) 1px, transparent 1px) 0 0 / 100% 33.333%,
+        linear-gradient(45deg, rgba(36, 84, 166, 0.035), rgba(36, 84, 166, 0.09));
+    }
+
+    .axis-plane::before,
+    .axis-plane::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+
+    .axis-plane::before {
+      right: -9px;
+      bottom: -6px;
+      border-left: 10px solid #40536a;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .axis-plane::after {
+      top: -9px;
+      left: -6px;
+      border-bottom: 10px solid #40536a;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+
+    .axis-label {
+      position: absolute;
+      z-index: 2;
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 720;
+    }
+
+    .axis-label-x {
+      right: 24px;
+      bottom: 14px;
+    }
+
+    .axis-label-y {
+      left: 0;
+      top: 8px;
+    }
+
+    .axis-origin {
+      position: absolute;
+      left: 38px;
+      bottom: 24px;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.35;
+    }
+
+    .trajectory {
+      position: absolute;
+      left: 17%;
+      bottom: 23%;
+      z-index: 1;
+      width: 58%;
+      height: 0;
+      border-top: 3px solid rgba(36, 84, 166, 0.76);
+      transform: rotate(-28deg);
+      transform-origin: left center;
+    }
+
+    .trajectory::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -7px;
+      border-left: 11px solid rgba(36, 84, 166, 0.76);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .trajectory span {
+      position: absolute;
+      left: 42%;
+      bottom: 10px;
+      color: var(--accent);
+      font-size: 12.5px;
+      line-height: 1.35;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .axis-stage {
+      position: absolute;
+      z-index: 2;
+      max-width: 176px;
+      padding: 8px 10px;
+      border: 1px solid #d7e0ec;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 24px rgba(23, 31, 43, 0.08);
+      color: #253246;
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+
+    .axis-stage strong {
+      display: block;
+      color: #172033;
+      font-size: 14.5px;
+    }
+
+    .axis-stage span {
+      display: block;
+      color: var(--muted);
+    }
+
+    .stage-1 { left: 9%; bottom: 12%; }
+    .stage-2 { left: 28%; bottom: 29%; }
+    .stage-3 { left: 49%; bottom: 47%; }
+    .stage-4 {
+      right: 5%;
+      top: 15%;
+      border-color: #b9c9df;
+      background: #f3f7ff;
+    }
+
+    .compact-list,
+    .process-list {
+      margin: 12px 0 22px;
+      padding-left: 1.25em;
+    }
+
+    .compact-list li,
+    .process-list li {
+      margin: 7px 0;
+      padding-left: 0.2em;
+    }
+
+    .definition-list {
+      margin: 16px 0 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .definition-list div {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 18px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .definition-list dt {
+      font-weight: 720;
+      color: #1d2b3a;
+    }
+
+    .definition-list dd {
+      margin: 0;
+      color: #3b4654;
+    }
+
+    .evidence-chain {
+      margin: 16px 0 22px;
+      padding: 14px 18px;
+      border: 1px solid #dfe5ee;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .evidence-chain p {
+      display: grid;
+      grid-template-columns: 98px 1fr;
+      gap: 16px;
+      margin: 0;
+    }
+
+    .evidence-chain p + p {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e3e8f0;
+    }
+
+    .contrast {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 14px 0 20px;
+    }
+
+    .contrast p {
+      margin: 0;
+      padding-left: 14px;
+      border-left: 3px solid #b6c4d8;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+      background: rgba(36, 84, 166, 0.08);
+      color: #173b78;
+      padding: 0.12em 0.34em;
+      border-radius: 4px;
+    }
+
+    pre {
+      margin: 18px 0 22px;
+      padding: 18px 20px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--soft);
+      border: 1px solid #e2e7ef;
+      border-radius: 8px;
+      line-height: 1.68;
+    }
+
+    pre code {
+      display: block;
+      padding: 0;
+      background: transparent;
+      color: #172033;
+      font-size: 13.5px;
+    }
+
+    strong { font-weight: 720; }
+
+    @media (max-width: 760px) {
+      body { font-size: 16px; background: var(--paper); }
+      main {
+        width: 100%;
+        margin: 0;
+        padding: 32px 22px 44px;
+        border: 0;
+        box-shadow: none;
+      }
+      h1 { font-size: 26px; margin-bottom: 28px; }
+      h2 { font-size: 20px; margin-top: 42px; }
+      h3 { font-size: 17px; }
+      h4 { font-size: 15.5px; }
+      .lead { font-size: 17px; }
+      .contrast {
+        grid-template-columns: 1fr;
+      }
+      .axis-figure {
+        margin: 20px -4px 28px;
+        padding: 16px 14px 18px;
+      }
+      .axis-chart {
+        min-height: 430px;
+        padding: 48px 14px 54px 42px;
+      }
+      .axis-plane {
+        inset: 48px 16px 56px 42px;
+      }
+      .axis-label {
+        font-size: 12px;
+      }
+      .axis-label-x {
+        right: 10px;
+        bottom: 12px;
+      }
+      .axis-label-y {
+        left: 0;
+        top: 16px;
+      }
+      .axis-origin {
+        left: 16px;
+        bottom: 22px;
+      }
+      .trajectory {
+        left: 16%;
+        bottom: 24%;
+        width: 64%;
+        transform: rotate(-34deg);
+      }
+      .trajectory span {
+        display: none;
+      }
+      .axis-stage {
+        max-width: 118px;
+        padding: 6px 8px;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .axis-stage strong {
+        font-size: 12.8px;
+      }
+      .axis-stage span {
+        display: none;
+      }
+      .stage-1 { left: 10%; bottom: 12%; }
+      .stage-2 { left: 28%; bottom: 32%; }
+      .stage-3 { left: 47%; bottom: 51%; }
+      .stage-4 { right: 2%; top: 16%; }
+      .definition-list div,
+      .evidence-chain p {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    @media print {
+      @page { size: A4; margin: 18mm 17mm 20mm; }
+      body { background: white; font-size: 11.3pt; line-height: 1.78; }
+      main {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        background: white;
+      }
+      h1 { font-size: 21pt; margin-bottom: 22pt; }
+      h2 { font-size: 15pt; margin-top: 28pt; padding-top: 14pt; }
+      h3 { font-size: 12.7pt; margin-top: 20pt; }
+      h4 { font-size: 11.6pt; margin-top: 16pt; }
+      pre { border-color: #d8dde6; page-break-inside: avoid; }
+      .axis-figure {
+        margin: 8pt 0 12pt;
+        padding: 7pt 8pt 8pt;
+        border-radius: 6px;
+      }
+      .axis-figure figcaption {
+        margin-bottom: 4pt;
+        font-size: 8.8pt;
+      }
+      .axis-chart {
+        min-height: 152pt;
+        padding: 19pt 13pt 22pt 28pt;
+      }
+      .axis-plane {
+        inset: 21pt 11pt 23pt 28pt;
+      }
+      .axis-label {
+        font-size: 7.4pt;
+      }
+      .axis-label-x {
+        right: 6pt;
+        bottom: 3pt;
+      }
+      .axis-label-y {
+        left: 0;
+        top: 2pt;
+      }
+      .axis-origin {
+        left: 8pt;
+        bottom: 5pt;
+        font-size: 6.8pt;
+      }
+      .trajectory {
+        left: 17%;
+        bottom: 23%;
+        width: 58%;
+        border-top-width: 2px;
+      }
+      .trajectory span {
+        bottom: 3pt;
+        font-size: 6.8pt;
+      }
+      .axis-stage {
+        max-width: 78pt;
+        padding: 3pt 4pt;
+        border-radius: 4px;
+        font-size: 7pt;
+        line-height: 1.22;
+        box-shadow: none;
+      }
+      .axis-stage strong {
+        font-size: 7.8pt;
+      }
+      .axis-stage span {
+        display: none;
+      }
+      .stage-1 { left: 8%; bottom: 10%; }
+      .stage-2 { left: 28%; bottom: 29%; }
+      .stage-3 { left: 49%; bottom: 47%; }
+      .stage-4 { right: 4%; top: 11%; }
+      .axis-figure,
+      .definition-list,
+      .evidence-chain,
+      .contrast {
+        page-break-inside: avoid;
+      }
+      p, h3 { orphans: 3; widows: 3; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+<p class="kicker">DeepSeek Coding Agent Harness</p>
+<h1>从代码助手到工程工作系统：Coding Agent Harness 的产品方向思考</h1>
+<p class="lead">Spec 实现、复杂任务执行、多 Agent 编排、长期记忆、工具调用、验证回滚，正在变成行业共识。它们决定一个 Agent 能不能真正可用，但未必决定下一阶段谁能做出差异。</p>
+<p>从过去一年 Coding Agent 的形态变化可以看到：从 IDE 插件，到独立 Agent，再到 Agent Dashboard。</p>
+<p><strong>表面是交互界面的变化，更深一层的变化是：人类正在把越来越大范围和高层级的知识工作和心智工作托付给 Agent。</strong></p>
+<p>人类从“亲自做”，变成“授权 Agent 做”，再变成“监督多个 Agent”，最后变成“设计规则、边界和价值判断”。</p>
+<p class="thesis">Harness 的产品机会，就在这个迁移过程中，如何让 Agent 接住人类用户更大的托付范围。</p>
+<h2>一、两条演进轴：执行可靠性与托付层级</h2>
+<p class="section-note">这部分是全文的判断坐标：一条轴解决“能不能做稳”，另一条轴解决“用户愿不愿意托付更高层级的工作”。</p>
+<figure class="axis-figure">
+  <figcaption>双轴判断框架：从代码助手走向工程工作系统</figcaption>
+  <div class="axis-chart" role="img" aria-label="横轴表示执行可靠性增强，纵轴表示托付层级上移。Coding Agent 从代码片段和明确任务，逐步走向模糊目标、工程判断辅助和持续演进的工作系统。">
+    <div class="axis-plane" aria-hidden="true"></div>
+    <div class="axis-label axis-label-y">托付层级上移 ↑</div>
+    <div class="axis-label axis-label-x">执行可靠性增强 →</div>
+    <div class="axis-origin">低可靠性 / 低托付</div>
+    <div class="trajectory" aria-hidden="true"><span>迁移方向</span></div>
+    <div class="axis-stage stage-1">
+      <strong>代码片段</strong>
+      <span>明确、局部、低风险</span>
+    </div>
+    <div class="axis-stage stage-2">
+      <strong>明确任务</strong>
+      <span>可执行 spec 与验证路径</span>
+    </div>
+    <div class="axis-stage stage-3">
+      <strong>模糊目标</strong>
+      <span>目标澄清、假设审计、证据组织</span>
+    </div>
+    <div class="axis-stage stage-4">
+      <strong>工程工作系统</strong>
+      <span>持续记忆、决策回放、托付边界</span>
+    </div>
+  </div>
+</figure>
+<h3>横轴：执行可靠性增强</h3>
+<p>它回答的是：Agent 能不能在更复杂、更真实的环境里稳定交付。</p>
+<p>这不是“基础地板”那么简单。越接近真实生产环境，越会发现可靠性本身就是产品差异。</p>
+<p>同样是实现一个 spec，demo 场景里只需要改代码；真实场景里还要处理项目上下文、历史约束、权限边界、测试缺口、运行环境、回滚路径和协作冲突。</p>
+<h3>纵轴：托付层级上移</h3>
+<p>它回答的是：用户愿意把多高层级的工作交给 Agent。</p>
+<p>托付对象会从代码片段、明确任务、spec，逐步上移到模糊目标、验证标准、产品和工程判断辅助、决策复盘，以及持续演进的工作流。</p>
+<p>这并不意味着 Agent 替代人类做最终判断。而是 Agent 把目标、假设、证据、取舍、风险和复盘过程结构化，帮助人类做更好的判断，也让系统后续能继续使用这些判断。</p>
+<h2>二、基于双轴的六个探索方向</h2>
+<p class="section-note">下面六个方向不是功能清单，而是从真实托付过程里拆出来的产品控制点。</p>
+<h3>1. 环境硬化：降低真实项目里的任务摩擦</h3>
+<p class="subhead">问题：施工的第一步是建工地，而不是让 Agent 每次都从 0 开始自由发挥。</p>
+<p>为了让 Agent 长期、规模化、可信地在一个仓库里工作，相比给 Agent 塞入更多工作指引，更好的方式是先把施工环境整理好。比如确保 repo 处在可追踪状态，配置启动脚本、测试骨架、lint、CI、回滚方式和默认验证路径。</p>
+<h4>配置者与施工者</h4>
+<p>这里可以区分两个角色：环境配置者和施工者。</p>
+<p>环境配置者负责把项目运行环境、测试入口、权限边界和风险区域整理清楚。环境配置好之后要上锁，施工者只能在配置好的环境里工作。</p>
+<p>这很重要。否则 Agent 干活遇阻时，很容易顺手拆墙：改测试、绕过 lint、改启动脚本、跳过验证，最后看起来任务完成了，实际把环境弄脏了。</p>
+<h4>任务后的环境回流</h4>
+<p>更好的方式是，每次施工结束后，由环境配置者根据这次任务里的摩擦自动优化环境配置。哪些命令重复试错了，哪些测试入口不清楚，哪些权限边界没有表达出来，都可以沉淀回项目配置。</p>
+<p>一方面固化环境，降低下一次任务摩擦；另一方面，避免施工者干活遇阻顺手拆墙。</p>
+<h3>2. 目标澄清和审计：围绕目标工作，而不是围绕 prompt 工作</h3>
+<p class="subhead">问题：用户给出的 prompt 往往只是一个入口，不是完整规格。</p>
+<p>Harness 要做的第一步，是把 prompt 整理成可执行的任务对象。</p>
+<pre><code class="language-text">Task Contract
+
+Goal: 这次任务要达成什么结果？
+Scope: 做什么，不做什么？
+Assumptions: 依赖哪些未验证假设？
+Context: 需要哪些项目背景和当前文件？
+Tools: 允许用哪些工具和环境？
+Budget: 时间、token、API、风险预算是多少？
+Verification: 什么证据证明完成？
+Human Gate: 哪些节点必须问人？</code></pre>
+<h4>从 prompt 到可审计对象</h4>
+<p>一旦任务变成有具体字段的对象，就可以对这个任务进行质量升级。</p>
+<p>Agent 可以在执行前和用户澄清更具体的目标、假设和证据，而不是直接开工。比如用户说“优化这个页面”，Agent 不应该立刻改 UI，而是先确认：优化的是转化率、可读性、加载速度，还是移动端可用性。</p>
+<p>同时，基于任务里的结构化信息，可以抽取目标实现预期，并用可执行检查去审计系统是否真的兑现了这些承诺。</p>
+<p>这类审计不能只看 tests passed。测试通过只能说明代码没有明显坏掉，不一定说明目标已经达成。更好的验证方式，是把目标、变更和证据对应起来：哪些承诺被证明了，哪些还只是推断，哪些需要上线后再看数据。</p>
+<h3>3. 认知 / 思考脚手架：帮助用户把问题想清楚</h3>
+<p class="subhead">问题：当用户把越来越多的模糊目标托付给 Agent 时，Agent 最需要做的不是马上执行，而是帮助用户把问题想清楚。</p>
+<p>模型已经吸收了大量人类知识和工程经验，也可以调用很多成熟的分析方法。比如第一性原理思考、跨学科思考、隐含假设审计、逆向思考。</p>
+<p>但这些方法不应该变成一堆产品里的概念名词。</p>
+<p>更合适的方式，是让它们变成关键节点上的轻量检查。</p>
+<h4>轻量检查卡</h4>
+<pre><code class="language-text">Question Card: 当前最值得回答的问题是什么？哪个未知会最大程度改变行动？
+Assumption Card: 当前方案依赖哪些假设？哪个假设最脆弱？如何低成本验证？
+Failure Card: 如果两周后失败，最可能因为什么？哪个风险可以提前规避？
+Trade-off Card: 选择这个方案，实际放弃了什么？这个代价是否被人类明确接受？</code></pre>
+<h4>成熟 Agent 的判断节奏</h4>
+<p>这不意味着 Agent 替人类决策。</p>
+<p>它更像认知脚手架：在关键节点提醒用户补齐思考，而不是直接给一个判断。长期看，这会让 Agent 本身更接近成熟工程师的工作方式。</p>
+<p>一个成熟的 Coding Agent，不应该只是写代码快，而是知道什么时候该问问题，什么时候该审计假设，什么时候该先验证再执行。</p>
+<h3>4. 决策回放：记录人和团队为什么这样决定</h3>
+<p class="subhead">问题：现在很多产品都在做 Agent trace，记录 Agent 读了哪些文件、调用了哪些工具、改了哪些代码。</p>
+<p>这很重要，但还不够。</p>
+<p>长期项目里，更常见的问题不是“Agent 当时改了什么”，而是“人和团队当时为什么这么决定”。</p>
+<p>三个月后，一个功能变复杂了，团队想重构。需要回放的通常是：当时为什么要做这个功能，为什么选这个方案而不是另一个，哪个约束影响了这个选择，哪些假设后来被证明错了。</p>
+<p>所以除了执行记录，Agent 可以在项目过程中增加一类决策记录。</p>
+<p class="key-line">执行记录解决可观测问题，决策记录解决可复盘问题。</p>
+<p>在之后的迭代过程中，团队可以完整、具体地回放整个决策路径，从项目历史记录里学到经验和教训。</p>
+<p>这对长期项目尤其重要。因为很多工程问题不是代码突然变坏，而是早期的取舍、假设和约束没有被持续追踪。决策回放把这些东西留下来，让下一次判断不必从头开始。</p>
+<h3>5. 债务管理：把“以后再说”显性化</h3>
+<p class="subhead">问题：在真实工程中，“举债”现象非常普遍。</p>
+<ul class="compact-list">
+  <li>代码有技术债。</li>
+  <li>产品有决策债。</li>
+  <li>验证也会有验证债。</li>
+</ul>
+<p>这些债务的可见度不一样，影响也经常缺乏评估。很多时候，团队并不是不知道有问题，而是问题被写成“以后再说”之后，就再也没人回来处理。</p>
+<p>Agent 很适合做这类债务维护和记录。</p>
+<p>每次任务结束时，它可以把未验证假设、临时取舍、测试缺口、设计未确认、架构绕路记录下来。后续任务再进入同一模块时，Agent 可以主动提醒这些债务的前置依赖和还债计划。</p>
+<p>比如这次为了赶进度复用了旧状态管理，下一次要扩展这个功能时，Agent 就应该提醒：这里有一个架构债，继续叠功能会让后续重构成本更高。</p>
+<p>这相当于给项目增加一个长期判断卫生机制：帮助团队知道哪些未验证假设、临时取舍和历史约束仍在影响当前工作。</p>
+<h3>6. 人机托付界面：让用户交得出去，也接得回来</h3>
+<p class="subhead">问题：当人类托付给 Agent 的任务越来越复杂，人机交互的输入、输出和控制方式，也需要承托更多信息。</p>
+<p>Chat 在意图表达上有很大优势。用户可以自然地说自己想要什么，不需要一开始就写成完整 spec。</p>
+<p>但用户把事情交出去之后，问题就变了。</p>
+<p>他需要知道 Agent 理解的任务目标是什么，准备怎么做，哪些地方有风险，哪些动作需要授权，当前卡在哪里，最后拿什么证明已经完成。</p>
+<h4>从 chat 到 task console</h4>
+<p>所以交互不能只停留在 chat。可以考虑 chat + task console 的组合。</p>
+<p class="key-line">Chat 负责表达意图，task console 负责承接托付。</p>
+<p>用户不需要每一步都盯着 Agent，但关键节点必须能看见、能理解、能批准、能打断、能接管。越高层级的托付，越需要清楚的控制界面。否则用户会感觉事情交出去了，但失去了掌控感。</p>
+<h2>三、对 Harness 的产品影响</h2>
+<p class="section-note">如果把上面的探索方向落到 Harness 产品层，关键变化不是多几个功能，而是任务生命周期里的对象、控制点和证据系统发生变化。</p>
+<h3>1. Prompt 升级为 Task Contract</h3>
+<p>Prompt 是自然语言输入，Task Contract 是可执行任务对象。</p>
+<p>这个对象会成为执行、验证、记忆和治理的共同入口。</p>
+<p>如果没有 Task Contract，系统只能围绕一段 prompt 打补丁：计划是临时生成的，验证是事后补的，记忆不知道该写什么，安全边界也很难稳定表达。</p>
+<p>一旦任务被对象化，Harness 就可以围绕它做很多事：澄清目标、控制范围、分配工具、设置预算、插入 human gate、记录证据、写入记忆。</p>
+<h3>2. 工程思维进入任务生命周期</h3>
+<p>一个成熟的 Coding Agent，应该具备成熟的软件工程师思维。</p>
+<p>在执行每一个 coding 任务时，它应该自发执行高质量的思考和认知，而不只是机械完成任务。</p>
+<p>这些思考可以对应为一组 workflow hooks。</p>
+<pre><code class="language-text">pre_task: 目标是否清楚，是否值得执行。
+pre_plan: 关键假设是什么，是否需要先验证。
+pre_context: 当前最需要哪些上下文。
+pre_execute: 最大失败路径是什么。
+pre_verify: 什么证据能证明完成。
+post_run: 留下了哪些决策债，哪些内容需要写入记忆。</code></pre>
+<p>这样，高质量认知过程不会停留在 prompt 里，而会进入任务生命周期。</p>
+<h3>3. 上下文和记忆需要分层管理</h3>
+<p>基于项目全量 raw data，Harness 可以动态提取和更新更多关键的结构化记忆。</p>
+<p>这些记忆不能都混在一起。项目事实、用户偏好、当前任务状态、历史决策、未验证假设、债务记录、验证证据，性质完全不同。</p>
+<dl class="definition-list">
+  <div>
+    <dt>项目事实</dt>
+    <dd>可以长期保留，但要能被新事实更新。</dd>
+  </div>
+  <div>
+    <dt>用户和团队偏好</dt>
+    <dd>可以跨任务复用，但要有项目边界。</dd>
+  </div>
+  <div>
+    <dt>当前任务状态</dt>
+    <dd>只在任务生命周期里有效。</dd>
+  </div>
+  <div>
+    <dt>历史决策</dt>
+    <dd>需要保留理由和适用条件。</dd>
+  </div>
+  <div>
+    <dt>未验证假设</dt>
+    <dd>需要有过期提醒。</dd>
+  </div>
+  <div>
+    <dt>债务记录</dt>
+    <dd>需要有影响评估。</dd>
+  </div>
+  <div>
+    <dt>验证证据</dt>
+    <dd>需要能被后续任务引用。</dd>
+  </div>
+</dl>
+<p>所以长期记忆不是“记得越多越好”，而是要有写入规则、过期策略、权限边界和检索方式。</p>
+<p>这也是 Harness 很重要的一层能力：不是把所有历史都塞进上下文窗口，而是知道什么时候该用哪一类记忆。</p>
+<h3>4. Trace 和 Eval 从动作记录升级为证据系统</h3>
+<p>Trace 当然要记录 Agent 读了什么文件、跑了什么命令、改了什么代码。但如果只停在动作记录，它只能回答“Agent 做了什么”，不能回答“为什么我们相信这个任务已经完成”。</p>
+<p>当任务被升级成 Task Contract 之后，Trace 和 Eval 也应该围绕任务目标组织起来。它需要把目标、上下文、关键判断、执行动作、验证证据、缺失证据和人类确认串起来。</p>
+<div class="evidence-chain">
+  <p><strong>执行记录</strong><span>解决可观测问题。</span></p>
+  <p><strong>决策记录</strong><span>解决可复盘问题。</span></p>
+  <p><strong>验证记录</strong><span>解决可信问题。</span></p>
+</div>
+<p>三者合在一起，才是完整的任务证据链。</p>
+<p>这对真实项目很重要。因为用户不会只关心 Agent 有没有改代码，还会关心这个改动是否兑现了目标、有没有破坏旧逻辑、哪些地方只是推断、哪些地方已经被测试或截图证明。</p>
+<p>所以 Trace 和 Eval 不应该是任务结束后的附属总结，而应该成为 Harness 的一等对象。它们要和 Task Contract、长期记忆、决策回放、债务管理连在一起。</p>
+<p>否则系统有日志，但没有证据；有过程，但很难让人信任。</p>
+<h3>5. 人机交互从 chat 扩展到控制过程</h3>
+<p>Chat 很适合表达意图，但不适合承接完整的托付过程。</p>
+<p>用户说“帮我改一下这个功能”，背后其实包含很多隐含信息：目标是什么，边界在哪里，哪些地方不能碰，什么结果算完成，哪些风险需要人确认。</p>
+<p>所以，人机交互不应该只理解成“用户输入 prompt，Agent 输出结果”。需要设计的是中间的控制过程。</p>
+<ol class="process-list">
+  <li>任务开始前，系统要帮助用户把模糊 prompt 变成 Task Contract。</li>
+  <li>任务执行前，用户要能看到计划、风险和需要授权的动作。</li>
+  <li>任务执行中，用户要能理解当前进度，也能在关键节点打断、改范围、补充约束。</li>
+  <li>任务结束后，输出不应该只是代码和总结，还应该包括验证证据、决策记录、遗留债务和后续建议。</li>
+</ol>
+<p>这里也可以考虑 chat + task console 的组合。</p>
+<p>Chat 负责自然表达，task console 负责承接托付。</p>
+<p>用户不需要每一步都盯着 Agent，但关键节点必须能看见、能批准、能打断、能接管。</p>
+<p>越高层级的托付，越需要清楚的控制界面。否则用户会感觉事情交出去了，但失去了掌控感。</p>
+<h3>6. 安全边际从权限扩展到托付边界</h3>
+<p>安全不只是“哪些文件不能删、哪些命令不能跑”。</p>
+<p>托付层级上移后，安全还包括哪些判断必须保留人工确认，哪些结论不能以确定语气输出，哪些记忆不能写入，哪些任务不能跨项目复用上下文，哪些工具调用需要风险升级，哪些自动化建议只能作为建议、不能直接执行。</p>
+<p>这些不是传统权限系统能完全覆盖的问题。</p>
+<div class="contrast">
+  <p><strong>权限边界</strong><br>控制的是 Agent 能不能做某个动作。</p>
+  <p><strong>托付边界</strong><br>控制的是 Agent 能不能承担某类判断。</p>
+</div>
+<p>这类安全边际决定了 Agent 可以被托付到什么层级。</p>
+<h2>四、小结</h2>
+<p>我们很难准确预测明年 Agent 和 Harness 会长成什么形态。</p>
+<p>但有一件事相对确定：人类用户会继续把更多知识工作托付给 Agent。</p>
+<p>软件工程可能是人类知识工作中最大规模的“手工业协作”之一。AI 带来的变化，本质上是知识工作的工业化升级。</p>
+<p>在这个升级过程中，人类会从亲自完成具体工作，逐步转向设定规则、边界和价值判断。</p>
+<p class="thesis">谁能接住更大范围、更高层级的托付，谁就更可能定义下一阶段的 Agent Harness。</p>
+  </main>
+</body>
+</html>
