@@ -504,6 +504,130 @@ h3 {
   font-family: var(--display);
   font-style: italic;
 }
+
+.forms-section {
+  padding-top: 88px;
+  padding-bottom: 40px;
+}
+.forms-layout {
+  display: grid;
+  grid-template-columns: 0.72fr 1.8fr;
+  gap: 64px;
+  align-items: center;
+}
+.forms-copy h2 {
+  font-size: 46px;
+  line-height: 1.5;
+  margin-bottom: 36px;
+}
+.interaction-modes {
+  display: grid;
+  gap: 28px;
+}
+.interaction-mode {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+.interaction-number {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.interaction-mode h3 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.interaction-mode p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+.forms-figure {
+  min-width: 0;
+}
+.forms-figure img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.forms-figure figcaption {
+  color: var(--muted);
+  font-size: 10px;
+  text-align: right;
+  margin-top: 12px;
+}
+@media (min-width: 901px) and (max-width: 1100px) {
+  .forms-layout {
+    grid-template-columns: 0.85fr 1.6fr;
+    gap: 32px;
+  }
+  .forms-copy h2 {
+    font-size: 38px;
+    margin-bottom: 28px;
+  }
+  .interaction-mode p {
+    font-size: 13px;
+  }
+}
+@media (max-width: 900px) {
+  .forms-section {
+    padding-top: 56px;
+    padding-bottom: 8px;
+  }
+  .forms-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: stretch;
+  }
+  .forms-copy {
+    display: contents;
+  }
+  .forms-copy h2 {
+    order: 0;
+    font-size: 34px;
+    margin: 0;
+  }
+  .forms-title-break {
+    display: none;
+  }
+  .forms-figure {
+    order: 1;
+  }
+  .interaction-modes {
+    order: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .interaction-mode h3 {
+    font-size: 25px;
+  }
+}
+@media (max-width: 500px) {
+  .forms-copy h2 {
+    font-size: 32px;
+  }
+  .forms-figure figcaption {
+    font-size: 9px;
+  }
+  .interaction-modes {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .interaction-mode {
+    padding-top: 16px;
+  }
+  .interaction-mode h3 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+
 .section-heading {
   display: flex;
   align-items: end;
