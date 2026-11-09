@@ -6,25 +6,25 @@
     <meta name="theme-color" content="#f6f4ec" />
     <meta
       name="description"
-      content="Loomee 小小肩宠，陪孩子在真实世界玩耍、探索、学习。认识肩上的 AI 伙伴，观看产品概念 Demo，了解终生陪伴的 Personal Agent 愿景。"
+      content="Loomee——终生陪伴的 Personal Agent。从健康、工作（学习）、娱乐与爱（关系）四个维度提供陪伴和帮助。小小肩宠，是这一愿景的第一步。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content="Loomee 小小肩宠 · 陪孩子探索真实世界" />
+    <meta property="og:title" content="Loomee · 终生陪伴的 Personal Agent" />
     <meta
       property="og:description"
-      content="轻盈随身，自然交流，主动但不打扰。一个和孩子一起看世界的 AI 伙伴。"
+      content="追求幸福是人类永恒不变的需求。认识 Loomee 的理念，以及第一款产品小小肩宠。"
     />
     <meta
       property="og:image"
-      content="https://d-wwei.github.io/loomee/assets/images/hero.webp"
+      content="https://d-wwei.github.io/loomee/assets/images/brand-hero.webp"
     />
     <meta property="og:url" content="https://d-wwei.github.io/loomee/" />
     <link rel="canonical" href="https://d-wwei.github.io/loomee/" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Loomee 小小肩宠 · 陪孩子探索真实世界</title>
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=2" />
+    <title>Loomee · 终生陪伴的 Personal Agent</title>
+    <script src="app.js?v=2" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -33,8 +33,8 @@
         >loomee<span class="wordmark-dot" aria-hidden="true">.</span></a
       >
       <nav class="desktop-nav" aria-label="主导航">
-        <a href="#about">认识肩宠</a><a href="#moments">陪伴日常</a
-        ><a href="#vision">我们的愿景</a>
+        <a href="#philosophy">我们的理念</a><a href="#product">小小肩宠</a
+        ><a href="#features">陪伴日常</a>
       </nav>
       <div class="header-actions">
         <a class="button button-small" href="#film"
@@ -49,85 +49,133 @@
         </button>
       </div>
       <nav id="mobile-nav" class="mobile-nav" aria-label="移动导航" hidden>
-        <a href="#about">认识肩宠</a><a href="#moments">陪伴日常</a
-        ><a href="#vision">我们的愿景</a>
+        <a href="#philosophy">我们的理念</a><a href="#product">小小肩宠</a
+        ><a href="#features">陪伴日常</a>
       </nav>
     </header>
     <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
+      <section id="brand" class="hero" aria-labelledby="hero-title">
         <picture class="hero-image"
           ><source
             media="(max-width: 600px)"
-            srcset="assets/images/hero-800.webp" />
+            srcset="assets/images/brand-hero-800.webp" />
           <img
-            src="assets/images/hero.webp"
-            alt="孩子在户外观察蚂蚁，绿色小肩宠陪在肩头，产品概念场景"
-            width="1600"
-            height="900"
+            src="assets/images/brand-hero.webp"
+            alt="阳光下微笑的女孩，肩头有一个绿色 AI 小伙伴，Loomee 产品概念形象"
+            width="1920"
+            height="1080"
             fetchpriority="high"
         /></picture>
         <div class="hero-shade"></div>
         <div class="hero-copy">
           <p class="eyebrow">
-            <span class="little-spark" aria-hidden="true">✳</span> A LITTLE
-            FRIEND. A BIG WORLD.
+            <span class="little-spark" aria-hidden="true">✳</span> A COMPANION
+            FOR LIFE
           </p>
-          <h1 id="hero-title">小小肩宠<span class="title-period">。</span></h1>
-          <p class="hero-tagline">陪孩子在真实世界<br />玩耍、探索、学习。</p>
+          <h1 id="hero-title">loomee<span>.</span></h1>
+          <p class="hero-tagline">
+            终生陪伴的<br /><span lang="en">Personal Agent</span>
+          </p>
           <p class="hero-description">
-            一个在肩上的 AI 伙伴，<br />和孩子一起，看见世界的每一个小小奇妙。
+            从出生到老去，<br />一个和你一起生活的 AI 伙伴。
           </p>
-          <a class="button hero-cta" href="#film"
-            ><svg
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path d="m9 5 11 7-11 7V5Z" fill="currentColor" />
-            </svg>
-            看看我们的故事 <span aria-hidden="true">↗</span></a
+          <a class="button hero-cta" href="#philosophy"
+            >了解我们的理念 <span aria-hidden="true">↗</span></a
           >
-          <p class="hero-note">为 2–6 岁孩子探索的 AI 陪伴产品</p>
         </div>
         <div class="hero-caption">
           <span class="caption-dot" aria-hidden="true"></span>
-          每一份好奇，都值得被陪伴。
+          陪伴一生，一起成长。
         </div>
         <span class="image-note">产品形态与体验示意</span>
       </section>
 
       <section
-        id="about"
-        class="intro section-wrap"
-        aria-labelledby="intro-title"
+        id="philosophy"
+        class="philosophy-section section-wrap"
+        aria-labelledby="philosophy-title"
       >
         <div class="section-kicker">
-          <span>01 / MEET LOOMEE</span><span class="small-line"></span>
+          <span>01 / OUR PHILOSOPHY</span><span class="small-line"></span
+          ><span>我们的理念</span>
         </div>
-        <div class="intro-content">
-          <h2 id="intro-title">
-            我们要做的不止是肩戴，<br />而是<span class="serif-accent"
-              >肩宠。</span
-            >
-          </h2>
+        <div class="philosophy-heading">
+          <h2 id="philosophy-title">追求幸福，<br />是人类永恒不变的需求。</h2>
+          <p>
+            未来的 Personal Agent 会陪伴人从出生到老去。<br />Loomee
+            从四个维度提供陪伴和帮助。
+          </p>
+        </div>
+        <div class="dimensions">
+          <article class="dimension">
+            <span class="dimension-number">01 / HEALTH</span>
+            <h3>健康</h3>
+            <p>情绪、身体和心理</p>
+          </article>
+          <article class="dimension">
+            <span class="dimension-number">02 / WORK & LEARNING</span>
+            <h3>工作<span>（学习）</span></h3>
+            <p>帮助探索、表达与成长</p>
+          </article>
+          <article class="dimension">
+            <span class="dimension-number">03 / PLAY</span>
+            <h3>娱乐</h3>
+            <p>一起玩耍与创造</p>
+          </article>
+          <article class="dimension">
+            <span class="dimension-number">04 / LOVE & CONNECTION</span>
+            <h3>爱<span>（关系）</span></h3>
+            <p>分享情感、建立关系</p>
+          </article>
+        </div>
+        <div class="life-stages">
+          <p class="life-stages-label">陪伴的方式，<br />随人生一起成长。</p>
           <div>
             <p>
-              它有自己的表情，也有和孩子一起经历的故事。<br
-                class="desktop-break"
-              />我们希望它通过一次次共同探索，逐渐成为懂孩子的伙伴。
+              不同人生阶段需要的帮助会变化：小时候一起玩耍、探索和学习；长大后参与工作与生活；需要更多照护时，帮助本人和家人更好地了解情况。
             </p>
-            <p class="muted">
-              让陪伴发生在真实生活里，<br />从一句“为什么”，到一段属于彼此的记忆。
+            <p class="first-step">
+              小小肩宠是这一愿景的第一步。 <span aria-hidden="true">↘</span>
             </p>
           </div>
         </div>
-        <div class="principles">
-          <div><span>01</span>轻盈随身</div>
-          <div><span>02</span>持续在场</div>
-          <div><span>03</span>自然交流</div>
-          <div><span>04</span>主动但不打扰</div>
+      </section>
+
+      <section
+        id="product"
+        class="product-section"
+        aria-labelledby="product-title"
+      >
+        <div class="section-wrap">
+          <div class="section-kicker">
+            <span>02 / OUR FIRST COMPANION</span><span class="small-line"></span
+            ><span>第一款产品</span>
+          </div>
+          <div class="product-main">
+            <div>
+              <p class="product-pretitle">从童年的每一次好奇开始</p>
+              <h2 id="product-title">小小肩宠<span>。</span></h2>
+              <p class="product-belief">我们要做的不止是肩戴，而是肩宠。</p>
+            </div>
+            <div class="product-copy">
+              <h3>陪孩子在真实世界<br />玩耍、探索、学习。</h3>
+              <p>
+                Loomee 为 2–6 岁孩子探索的肩上 AI 伙伴。<br />有自己的表情，也有和孩子一起经历的故事。
+              </p>
+              <p>
+                我们希望它通过共同经历、记忆和宠物关系，<br />逐渐理解孩子，成为生活里的小伙伴。
+              </p>
+              <a class="text-link" href="#film"
+                >用 90 秒认识小小肩宠 <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+          <div class="principles">
+            <div><span>01</span>轻盈随身</div>
+            <div><span>02</span>持续在场</div>
+            <div><span>03</span>自然交流</div>
+            <div><span>04</span>主动但不打扰</div>
+          </div>
         </div>
       </section>
 
@@ -138,12 +186,10 @@
       >
         <div class="section-heading">
           <div>
-            <p class="eyebrow">THE LOOMEE FILM</p>
-            <h2 id="film-title">
-              先认识一下，<span class="serif-accent">这个小家伙。</span>
-            </h2>
+            <p class="eyebrow">03 / THE LOOMEE FILM</p>
+            <h2 id="film-title">90 秒，走进它的一天。</h2>
           </div>
-          <span class="section-aside">一段关于陪伴的想象</span>
+          <span class="section-aside">小小肩宠 · 完整 Demo</span>
         </div>
         <div class="film-player">
           <video
@@ -152,7 +198,7 @@
             playsinline
             preload="none"
             poster="assets/images/hero.webp"
-            aria-label="Loomee 产品概念演示完整视频"
+            aria-label="小小肩宠90秒完整概念演示"
           >
             <source src="assets/videos/demo.mp4" type="video/mp4" />
             你的浏览器暂不支持视频播放，可<a href="assets/videos/demo.mp4"
@@ -169,212 +215,157 @@
       </section>
 
       <section
-        id="moments"
-        class="moments-section"
-        aria-labelledby="moments-title"
+        id="features"
+        class="features-section"
+        aria-labelledby="features-title"
       >
         <div class="section-wrap">
           <div class="section-kicker">
-            <span>02 / LITTLE EVERYDAY MOMENTS</span
-            ><span class="small-line"></span>
+            <span>04 / LITTLE EVERYDAY MOMENTS</span
+            ><span class="small-line"></span><span>产品特性</span>
           </div>
           <div class="section-heading">
-            <div>
-              <h2 id="moments-title">陪伴，<br />发生在生活里。</h2>
-            </div>
+            <h2 id="features-title">陪伴，发生在生活里。</h2>
             <p class="section-description">
-              从第一次说你好，到睡前的最后一个故事。<br />这是我们希望与孩子一起度过的日常。
+              这是我们希望与孩子一起度过的日常。
             </p>
           </div>
-          <div class="scene-layout">
-            <div
-              class="scene-choices"
-              role="group"
-              aria-label="选择概念演示场景"
-            >
-              <button
-                class="scene-choice is-active"
-                data-scene="meet"
-                aria-pressed="true"
-              >
-                <span class="scene-number">01</span
-                ><span>初次见面<small>从一声“你好”开始</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button
-                class="scene-choice"
-                data-scene="curiosity"
-                aria-pressed="false"
-              >
-                <span class="scene-number">02</span
-                ><span>十万个为什么<small>一起发现世界的奇妙</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button
-                class="scene-choice"
-                data-scene="english"
-                aria-pressed="false"
-              >
-                <span class="scene-number">03</span
-                ><span>生活中的英语浸润<small>在玩耍里，自然开口</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button
-                class="scene-choice"
-                data-scene="safety"
-                aria-pressed="false"
-              >
-                <span class="scene-number">04</span
-                ><span>危险识别与提醒<small>多一份对身边的留意</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button
-                class="scene-choice"
-                data-scene="memory"
-                aria-pressed="false"
-              >
-                <span class="scene-number">05</span
-                ><span>记录每天的成长<small>把小小瞬间，慢慢记住</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button
-                class="scene-choice"
-                data-scene="bedtime"
-                aria-pressed="false"
-              >
-                <span class="scene-number">06</span
-                ><span>睡前故事与守护<small>把今天，讲成一个故事</small></span
-                ><span class="scene-arrow" aria-hidden="true">↗</span>
-              </button>
-            </div>
-            <div class="scene-stage">
-              <div class="scene-video-wrap">
-                <video
-                  id="scene-video"
-                  controls
-                  playsinline
-                  preload="none"
-                  poster="assets/images/meet.webp"
-                  aria-label="初次见面概念演示"
-                >
-                  <source src="assets/videos/meet.mp4" type="video/mp4" />
-                  可<a href="assets/videos/meet.mp4">打开场景视频</a>。</video
-                ><span class="concept-tag">目标体验 · 概念演示</span>
-              </div>
-              <div class="scene-copy" aria-live="polite" aria-atomic="true">
-                <p class="eyebrow" id="scene-label">
-                  01 / HELLO, LITTLE FRIEND
+          <div class="feature-grid">
+            <figure class="feature">
+              <img
+                src="assets/images/curiosity.webp"
+                srcset="
+                  assets/images/curiosity-800.webp  800w,
+                  assets/images/curiosity.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="孩子观察蚂蚁，肩宠回应为什么蚂蚁会排队走路的概念场景"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">01 / CURIOSITY</span>
+                <h3>回应“十万个为什么”</h3>
+                <p>结合眼前的世界，陪孩子把好奇心继续问下去。</p>
+              </figcaption>
+            </figure>
+            <figure class="feature">
+              <img
+                src="assets/images/english.webp"
+                srcset="
+                  assets/images/english-800.webp  800w,
+                  assets/images/english.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="孩子和肩宠一起阅读英文绘本，在生活中接触英语的概念场景"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">02 / LEARNING</span>
+                <h3>生活中的英语浸润</h3>
+                <p>读绘本、玩游戏，让简单的英语交流自然融入生活。</p>
+              </figcaption>
+            </figure>
+            <figure class="feature">
+              <img
+                src="assets/images/quiet.webp"
+                srcset="
+                  assets/images/quiet-800.webp  800w,
+                  assets/images/quiet.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="孩子专注于自己的活动，肩宠安静陪在身边的概念场景"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">03 / PRESENCE</span>
+                <h3>懂得参与，也懂得安静</h3>
+                <p>一起读绘本、玩游戏；孩子专注时，安静地陪在身边。</p>
+              </figcaption>
+            </figure>
+            <figure class="feature">
+              <img
+                src="assets/images/safety.webp"
+                srcset="
+                  assets/images/safety-800.webp  800w,
+                  assets/images/safety.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="肩宠留意孩子身边危险并提醒的目标体验示意"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">04 / CARE</span>
+                <h3>发现危险，及时提醒</h3>
+                <p>希望识别危险环境与行为，提醒孩子并通知家长。</p>
+                <p class="feature-note">
+                  自动提醒与家长通知仍在研发验证中，不能替代成人看护。
                 </p>
-                <h3 id="scene-title">从今天起，一起看世界。</h3>
-                <p id="scene-description">
-                  一个小小的肩上伙伴，一声自然的问候。我们希望陪伴就这样开始，融进孩子的日常。
+              </figcaption>
+            </figure>
+            <figure class="feature">
+              <img
+                src="assets/images/memory.webp"
+                srcset="
+                  assets/images/memory-800.webp  800w,
+                  assets/images/memory.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="家长与孩子回顾一天经历、了解成长记录的目标体验示意"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">05 / MEMORY</span>
+                <h3>记录每天的成长</h3>
+                <p>让家长了解孩子今天关心什么、聊了什么，留住小小的成长。</p>
+                <p class="feature-note">
+                  自动成长记录尚未交付，长期记忆可靠性仍待验证。
                 </p>
-              </div>
-              <p id="scene-status" class="scene-status">
-                场景展示产品目标体验，非现有成品功能承诺。
-              </p>
-            </div>
+              </figcaption>
+            </figure>
+            <figure class="feature">
+              <img
+                src="assets/images/bedtime.webp"
+                srcset="
+                  assets/images/bedtime-800.webp  800w,
+                  assets/images/bedtime.webp     1600w
+                "
+                sizes="(max-width: 760px) 100vw, 50vw"
+                width="1600"
+                height="900"
+                alt="肩宠放在床边陪孩子听睡前故事的概念场景"
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="feature-number">06 / GOOD NIGHT</span>
+                <h3>把今天讲成睡前故事</h3>
+                <p>睡觉时放在床边，把共同经历延续成睡前的陪伴。</p>
+              </figcaption>
+            </figure>
           </div>
-          <noscript
-            ><p>
-              可直接观看各段概念演示：<a href="assets/videos/meet.mp4"
-                >初次见面</a
-              >
-              · <a href="assets/videos/curiosity.mp4">十万个为什么</a> ·
-              <a href="assets/videos/english.mp4">英语浸润</a> ·
-              <a href="assets/videos/safety.mp4">危险提醒</a> ·
-              <a href="assets/videos/memory.mp4">成长记录</a> ·
-              <a href="assets/videos/bedtime.mp4">睡前守护</a>。
-            </p></noscript
-          >
-        </div>
-      </section>
-
-      <section class="quiet-section section-wrap" aria-labelledby="quiet-title">
-        <div class="quiet-image">
-          <img
-            src="assets/images/quiet.webp"
-            srcset="
-              assets/images/quiet-800.webp  800w,
-              assets/images/quiet.webp     1600w
-            "
-            sizes="(max-width: 760px) 100vw, 58vw"
-            width="1600"
-            height="900"
-            alt="孩子专注于自己的活动，肩宠安静陪在身边的概念场景"
-            loading="lazy"
-          /><span class="image-note">产品体验示意</span>
-        </div>
-        <div class="quiet-copy">
-          <p class="eyebrow">ALWAYS THERE. NEVER IN THE WAY.</p>
-          <h2 id="quiet-title">
-            懂得参与，<br />也懂得<span class="serif-accent">安静。</span>
-          </h2>
-          <p>一起读绘本、玩游戏，<br />也在孩子专注时，安静地陪在身边。</p>
-          <p class="muted">
-            好的陪伴，不必时时开口。<br />我们希望它在被需要的时候，恰好在场。
+          <p class="features-note">
+            以上为产品目标体验与形态示意，非现有成品功能承诺。
           </p>
-          <span class="quiet-detail"
-            ><span aria-hidden="true">↳</span> 主动，但不打扰。</span
-          >
-        </div>
-      </section>
-
-      <section
-        id="vision"
-        class="vision-section"
-        aria-labelledby="vision-title"
-      >
-        <div class="section-wrap">
-          <div class="section-kicker">
-            <span>03 / A COMPANION FOR LIFE</span
-            ><span class="small-line"></span>
-          </div>
-          <p class="vision-pretitle">从小小肩宠出发</p>
-          <h2 id="vision-title">
-            陪伴可以有很多形态，<br />对你的理解，<span>一直延续。</span>
-          </h2>
-          <p class="vision-description">
-            设备可以更换，服务可以成长，<br />对一个人的理解能够延续。
-          </p>
-          <div class="vision-footer">
-            <span class="wordmark">loomee.</span>
-            <p>终生陪伴的 Personal Agent</p>
-            <span class="vision-star" aria-hidden="true">✳</span>
-          </div>
-        </div>
-      </section>
-
-      <section
-        class="progress-section section-wrap"
-        aria-labelledby="progress-title"
-      >
-        <div>
-          <p class="eyebrow">A LITTLE BEGINNING</p>
-          <h2 id="progress-title">从原型，<br />走向真实生活。</h2>
-        </div>
-        <div class="progress-copy">
-          <p>
-            小小肩宠正在一步步长大。<br />当前已跑通开发板原型的基础视听对话，接下来，我们将继续打磨可佩戴、可独立运行的样机，在真实家庭中验证陪伴体验。
-          </p>
-          <div class="progress-marker">
-            <span class="caption-dot" aria-hidden="true"></span> 原型研发中
-            <span class="progress-divider">/</span> 尚未上市
-          </div>
-          <a class="text-link" href="#film"
-            >再看一次 Demo <span aria-hidden="true">↗</span></a
-          >
         </div>
       </section>
     </main>
     <footer class="site-footer section-wrap">
       <div class="footer-top">
         <a class="wordmark" href="#" aria-label="Loomee 返回顶部">loomee.</a>
-        <p>小小肩宠，陪孩子在真实世界玩耍、探索、学习。</p>
+        <p>终生陪伴的 Personal Agent</p>
         <a class="back-top" href="#" aria-label="返回顶部">↑</a>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Loomee</span><span>产品形态与体验示意，非现有成品。</span
+        <span>© 2026 Loomee</span><span>小小肩宠 · 原型研发中，尚未上市。</span
         ><span>MADE FOR A LIFE TOGETHER.</span>
       </div>
     </footer>
